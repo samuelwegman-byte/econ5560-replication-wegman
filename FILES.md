@@ -1,0 +1,77 @@
+# File inventory
+
+Each line identifies one committed file. Generated files are produced by the master pipeline.
+
+- `.gitignore`: Ignore local virtual environments, caches, and OS metadata.
+- `DATA_SOURCE.md`: Raw-data URL, download date, checksum, and author attribution.
+- `FILES.md`: One-line inventory of every committed project file.
+- `README.md`: Complete reproduction instructions, citation, measured runtime, and limitations.
+- `SOURCE_PROVENANCE.md`: Team-code attribution and packaging/dependency changes.
+- `data/raw/S1Table.DTA`: Unchanged public S1 Table from Eppink et al. (2016).
+- `logs/FRESH_CLONE.md`: Fresh-clone procedure and measured verification results.
+- `logs/output_sha256.txt`: SHA-256 manifest of all regenerated output files.
+- `logs/requirements.txt`: Actual pip freeze from the verification environment.
+- `logs/run_log.txt`: Complete captured stdout/stderr from the fresh-clone run.
+- `logs/run_summary.json`: Observed run duration, versions, checks, and primary convergence flags.
+- `logs/steps/01_parse_data.log`: Raw parsing and sample-construction diagnostic log.
+- `outputs/dashboard/index.html`: Generated offline interactive dashboard: index.
+- `outputs/data/choice_long.csv`: Parsed analysis data or sample metadata: choice_long.
+- `outputs/data/design_cards.csv`: Parsed analysis data or sample metadata: design_cards.
+- `outputs/data/respondents.csv`: Parsed analysis data or sample metadata: respondents.
+- `outputs/data/sample_flow.json`: Parsed analysis data or sample metadata: sample_flow.
+- `outputs/figures/choice_rates_by_treatment.png`: Regenerated statistical figure: choice_rates_by_treatment.
+- `outputs/figures/fig1_responses_per_card.png`: Regenerated statistical figure: fig1_responses_per_card.
+- `outputs/figures/fig2_individual_effects.png`: Regenerated statistical figure: fig2_individual_effects.
+- `outputs/figures/ml_sensitivity.png`: Regenerated statistical figure: ml_sensitivity.
+- `outputs/paper_figures/01_table1_respondent_characteristics.png`: Regenerated published-exhibit reproduction or comparison: 01_table1_respondent_characteristics.
+- `outputs/paper_figures/01_table1_respondent_characteristics_comparison.csv`: Regenerated published-exhibit reproduction or comparison: 01_table1_respondent_characteristics_comparison.
+- `outputs/paper_figures/02_table2_attributes_and_levels.png`: Regenerated published-exhibit reproduction or comparison: 02_table2_attributes_and_levels.
+- `outputs/paper_figures/03_fig1_responses_per_choice_scenario.png`: Regenerated published-exhibit reproduction or comparison: 03_fig1_responses_per_choice_scenario.
+- `outputs/paper_figures/03_fig1_responses_per_choice_scenario_comparison.csv`: Regenerated published-exhibit reproduction or comparison: 03_fig1_responses_per_choice_scenario_comparison.
+- `outputs/paper_figures/04_table3_regression_results.png`: Regenerated published-exhibit reproduction or comparison: 04_table3_regression_results.
+- `outputs/paper_figures/04_table3_regression_results_comparison.csv`: Regenerated published-exhibit reproduction or comparison: 04_table3_regression_results_comparison.
+- `outputs/paper_figures/05_fig2_treatment_effect_densities.png`: Regenerated published-exhibit reproduction or comparison: 05_fig2_treatment_effect_densities.
+- `outputs/paper_figures/05_fig2_treatment_effect_densities_summary.csv`: Regenerated published-exhibit reproduction or comparison: 05_fig2_treatment_effect_densities_summary.
+- `outputs/paper_figures/05b_fig2_vs_published.png`: Regenerated published-exhibit reproduction or comparison: 05b_fig2_vs_published.
+- `outputs/paper_figures/05c_fig2_model4_variant.png`: Regenerated published-exhibit reproduction or comparison: 05c_fig2_model4_variant.
+- `outputs/paper_figures/side_by_side/01_table1_respondent_characteristics.png`: Regenerated published-exhibit reproduction or comparison: 01_table1_respondent_characteristics.
+- `outputs/paper_figures/side_by_side/02_table2_attributes_and_levels.png`: Regenerated published-exhibit reproduction or comparison: 02_table2_attributes_and_levels.
+- `outputs/paper_figures/side_by_side/03_fig1_responses_per_choice_scenario.png`: Regenerated published-exhibit reproduction or comparison: 03_fig1_responses_per_choice_scenario.
+- `outputs/paper_figures/side_by_side/04_table3_regression_results.png`: Regenerated published-exhibit reproduction or comparison: 04_table3_regression_results.
+- `outputs/paper_figures/side_by_side/05_fig2_treatment_effect_densities.png`: Regenerated published-exhibit reproduction or comparison: 05_fig2_treatment_effect_densities.
+- `outputs/results/cl.json`: Machine-readable estimated results: cl.
+- `outputs/results/descriptives.json`: Machine-readable estimated results: descriptives.
+- `outputs/results/ml.json`: Machine-readable estimated results: ml.
+- `outputs/slides/slide1_raw_pattern.png`: Regenerated presentation figure: slide1_raw_pattern.
+- `outputs/slides/slide2_reproduced.png`: Regenerated presentation figure: slide2_reproduced.
+- `outputs/slides/slide3_grouping_issue.png`: Regenerated presentation figure: slide3_grouping_issue.
+- `outputs/slides/slide4_effect_size.png`: Regenerated presentation figure: slide4_effect_size.
+- `outputs/tables/card_shares.csv`: Regenerated analysis or comparison table: card_shares.
+- `outputs/tables/choice_rates_by_treatment.csv`: Regenerated analysis or comparison table: choice_rates_by_treatment.
+- `outputs/tables/discrepancy_diagnosis.csv`: Regenerated analysis or comparison table: discrepancy_diagnosis.
+- `outputs/tables/fig1_responses_per_card.csv`: Regenerated analysis or comparison table: fig1_responses_per_card.
+- `outputs/tables/table1_comparison.csv`: Regenerated analysis or comparison table: table1_comparison.
+- `outputs/tables/table3_cl.csv`: Regenerated analysis or comparison table: table3_cl.
+- `outputs/tables/table3_ml.csv`: Regenerated analysis or comparison table: table3_ml.
+- `requirements-notebook.txt`: Optional notebook dependency list.
+- `requirements.txt`: Pinned direct Python dependencies.
+- `run_all.py`: Master script for all eight stages, validation, timing, and environment reporting.
+- `scripts/01_parse_data.py`: Parse raw data, reconstruct samples, and create regressors.
+- `scripts/02_descriptives.py`: Create descriptive tables, card counts, and treatment choice rates.
+- `scripts/03_conditional_logit.py`: Estimate published-grouping and standard conditional-logit specifications.
+- `scripts/04_mixed_logit.py`: Estimate primary mixed logit and 20-seed sensitivity for each sample.
+- `scripts/05_build_dashboard.py`: Build the offline dashboard from current results.
+- `scripts/06_slide_figures.py`: Build four presentation figures from current results.
+- `scripts/07_paper_figures.py`: Recreate five published exhibits, variants, and side-by-side comparisons.
+- `scripts/08_debug_discrepancies.py`: Diagnose differences between published cells and reconstructed values.
+- `scripts/REPLICATION_LOG.md`: Historical team methods, attempted specifications, and hypotheses.
+- `scripts/common.py`: Shared paths, published targets, conditional-logit and mixed-logit estimators.
+- `scripts/crosscheck_clogit.R`: Optional independent R conditional-logit cross-check.
+- `scripts/dashboard/template.html`: HTML/CSS/JavaScript source template for the generated dashboard.
+- `scripts/replication-targets/01_table1_respondent_characteristics.png`: Original published exhibit reference: 01_table1_respondent_characteristics (Eppink et al., 2016).
+- `scripts/replication-targets/02_table2_attributes_and_levels.png`: Original published exhibit reference: 02_table2_attributes_and_levels (Eppink et al., 2016).
+- `scripts/replication-targets/03_fig1_responses_per_choice_scenario.png`: Original published exhibit reference: 03_fig1_responses_per_choice_scenario (Eppink et al., 2016).
+- `scripts/replication-targets/04_table3_regression_results.png`: Original published exhibit reference: 04_table3_regression_results (Eppink et al., 2016).
+- `scripts/replication-targets/05_fig2_treatment_effect_densities.png`: Original published exhibit reference: 05_fig2_treatment_effect_densities (Eppink et al., 2016).
+- `scripts/replication-targets/README.md`: Guide to original exhibit references.
+- `scripts/replication_walkthrough.ipynb`: Optional narrated team walkthrough; saved execution outputs cleared.
