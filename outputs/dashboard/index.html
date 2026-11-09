@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Pricing the Stream</title>
+<meta name="description" content="Team 3 replication of Eppink et al. (2016), PLoS ONE: does showing dollar values change how councillors weigh development against water quality and heritage?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Literata:opsz,wght@7..72,500;7..72,600&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+:root{
+  --page:#f3f5f1; --surface:#fcfdfb; --surface-2:#e9eee8; --ink:#14201b; --ink-2:#48554f; --muted:#7a8680;
+  --hair:#dbe1da; --axis:#bfc6be; --accent:#1c5e50; --accent-ink:#ffffff; --accent-soft:#dcebe5;
+  --us:#4a3aa7; --us-soft:rgba(74,58,167,.16); --us-run:rgba(74,58,167,.38); --paper-mk:#4f5550;
+  --t1:#2a78d6; --t2:#eb6834; --t3:#1baf7a;
+  --optA:#1c5e50; --optB:#7fb5a6; --sq:#c9cfc7; --sq-ink:#3b443f;
+  --good-ink:#0b6b0b; --good-bg:#e1f1df; --warn-ink:#7a5200; --warn-bg:#fbefcf; --crit-ink:#a02828; --crit-bg:#f8e0de;
+  --info-ink:#2d4f7c; --info-bg:#e2ebf7; --shade:rgba(208,59,59,.08); --money-bg:#e3eed6; --money-ink:#35561b;
+  --shadow:0 1px 2px rgba(20,32,27,.06),0 4px 16px rgba(20,32,27,.06);
+  --serif:"Literata",Georgia,"Times New Roman",serif; --sans:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --page:#0e1311; --surface:#161c19; --surface-2:#1f2723; --ink:#eaf0ec; --ink-2:#b7c2bc; --muted:#85918b;
+  --hair:#27302c; --axis:#3a4540; --accent:#72c5ae; --accent-ink:#0e1311; --accent-soft:#1a2e28;
+  --us:#9a8ff0; --us-soft:rgba(154,143,240,.2); --us-run:rgba(154,143,240,.42); --paper-mk:#c9cdc6;
+  --t1:#3987e5; --t2:#d95926; --t3:#199e70;
+  --optA:#72c5ae; --optB:#2f6b5d; --sq:#3a4540; --sq-ink:#dfe6e1;
+  --good-ink:#7fd67f; --good-bg:#15301a; --warn-ink:#f2c35c; --warn-bg:#352a0e; --crit-ink:#f09a9a; --crit-bg:#3a1818;
+  --info-ink:#a9c6ef; --info-bg:#172538; --shade:rgba(230,103,103,.1); --money-bg:#233318; --money-ink:#b9dc8f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25)}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --page:#0e1311; --surface:#161c19; --surface-2:#1f2723; --ink:#eaf0ec; --ink-2:#b7c2bc; --muted:#85918b;
+  --hair:#27302c; --axis:#3a4540; --accent:#72c5ae; --accent-ink:#0e1311; --accent-soft:#1a2e28;
+  --us:#9a8ff0; --us-soft:rgba(154,143,240,.2); --us-run:rgba(154,143,240,.42); --paper-mk:#c9cdc6;
+  --t1:#3987e5; --t2:#d95926; --t3:#199e70;
+  --optA:#72c5ae; --optB:#2f6b5d; --sq:#3a4540; --sq-ink:#dfe6e1;
+  --good-ink:#7fd67f; --good-bg:#15301a; --warn-ink:#f2c35c; --warn-bg:#352a0e; --crit-ink:#f09a9a; --crit-bg:#3a1818;
+  --info-ink:#a9c6ef; --info-bg:#172538; --shade:rgba(230,103,103,.1); --money-bg:#233318; --money-ink:#b9dc8f;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.25)}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{background:var(--page);color:var(--ink);font:15.5px/1.6 var(--sans);margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:20px}
+h1,h2,h3{font-family:var(--serif);font-weight:600;text-wrap:balance;margin:0;letter-spacing:-.01em}
+h2{font-size:clamp(1.55rem,2.6vw,2rem);line-height:1.2}
+h3{font-size:1.12rem;line-height:1.3}
+p{margin:0}
+a{color:var(--accent);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.eyebrow{font:600 .72rem/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.lede{font-size:1.06rem;color:var(--ink-2);max-width:66ch}
+.prose{max-width:68ch;display:grid;gap:.8em;color:var(--ink-2)}
+.prose strong{color:var(--ink)}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+
+/* header */
+header.top{padding-block:44px 30px;border-bottom:1px solid var(--hair);background:
+  linear-gradient(180deg,var(--accent-soft),transparent 85%)}
+header.top h1{font-size:clamp(2rem,5vw,3.25rem);line-height:1.08;margin-top:14px;max-width:21ch}
+header.top .sub{margin-top:16px;font-size:1.1rem;color:var(--ink-2);max-width:62ch}
+.cite{margin-top:18px;font-size:.86rem;color:var(--muted);max-width:80ch}
+.status{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:26px}
+.stat{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:12px 14px;display:grid;gap:6px;align-content:start}
+.stat .k{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.stat .v{font-size:.95rem;line-height:1.35}
+
+/* nav */
+nav.sections{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--page);background:color-mix(in srgb,var(--page) 92%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--hair)}
+nav.sections .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-block:8px}
+nav.sections a{flex:none;text-decoration:none;color:var(--ink-2);font-size:.86rem;font-weight:500;padding:6px 11px;border-radius:999px;white-space:nowrap}
+nav.sections a:hover{background:var(--surface-2)}
+nav.sections a.on{background:var(--accent);color:var(--accent-ink)}
+
+section.block{padding-block:56px;border-bottom:1px solid var(--hair)}
+section.block>.wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:22px}
+section.block>.wrap>*,.two>*,.panel{min-width:0}
+ol.steps li>div{min-width:0;overflow-wrap:anywhere}
+.head{display:grid;gap:10px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:18px}
+.panel h3{margin-bottom:4px}
+.panel .cap{font-size:.86rem;color:var(--muted);margin-bottom:10px}
+.callout{border-left:3px solid var(--accent);padding:4px 0 4px 16px;color:var(--ink);max-width:68ch}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:5px;font:600 .74rem/1 var(--sans);padding:4px 8px;border-radius:999px;white-space:nowrap}
+.chip::before{font-size:.8rem;line-height:1}
+.chip.good{background:var(--good-bg);color:var(--good-ink)} .chip.good::before{content:"✓"}
+.chip.warn{background:var(--warn-bg);color:var(--warn-ink)} .chip.warn::before{content:"!"}
+.chip.crit{background:var(--crit-bg);color:var(--crit-ink)} .chip.crit::before{content:"✕"}
+.chip.info{background:var(--info-bg);color:var(--info-ink)} .chip.info::before{content:"≈"}
+
+/* treatments */
+.treats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.treats{grid-template-columns:minmax(0,1fr)}}
+.treat{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.treat .tag{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem}
+.dot{width:10px;height:10px;border-radius:50%;flex:none;display:inline-block}
+.treat p{font-size:.9rem;color:var(--ink-2)}
+.treat .n{font-size:.8rem;color:var(--muted)}
+
+/* segmented controls */
+.controls{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center}
+.ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.ctl>label,.ctl>.lab{font-size:.8rem;font-weight:600;color:var(--muted)}
+.seg{display:inline-flex;flex-wrap:wrap;background:var(--surface-2);border-radius:9px;padding:3px;gap:2px}
+.seg button{font:500 .84rem var(--sans);border:0;background:transparent;color:var(--ink-2);padding:6px 11px;border-radius:7px;cursor:pointer}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow);font-weight:600}
+select{font:500 .88rem var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:6px 8px}
+
+/* survey card */
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.card .ch{padding:12px 16px;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.86rem;color:var(--ink-2)}
+.card .cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:640px){.card .cols{grid-template-columns:minmax(0,1fr)}}
+.opt{padding:14px 16px;display:grid;gap:12px;align-content:start;border-right:1px solid var(--hair)}
+.opt:last-child{border-right:0;background:var(--surface-2)}
+@media (max-width:640px){.opt{border-right:0;border-bottom:1px solid var(--hair)}}
+.opt h4{margin:0;font:700 .95rem var(--sans)}
+.attr{display:grid;gap:2px}
+.attr .an{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.attr .lv{font-weight:600}
+.attr .ds{font-size:.82rem;color:var(--ink-2);line-height:1.4}
+.money{font:500 .8rem var(--mono);background:var(--money-bg);color:var(--money-ink);border-radius:6px;padding:3px 7px;justify-self:start;margin-top:3px}
+
+/* stacked share bars */
+.shares{display:grid;gap:9px}
+.srow{display:grid;grid-template-columns:118px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:.84rem}
+@media (max-width:520px){.srow{grid-template-columns:84px minmax(0,1fr) 38px}}
+.srow .l{display:flex;align-items:center;gap:6px;color:var(--ink-2);line-height:1.2}
+.srow.sel .l{color:var(--ink);font-weight:600}
+.bar{display:flex;height:24px;border-radius:5px;overflow:hidden;gap:2px;background:var(--surface)}
+.bar span{display:flex;align-items:center;justify-content:center;font:500 .74rem var(--mono);min-width:0;overflow:hidden;white-space:nowrap}
+.bar .a{background:var(--optA);color:var(--accent-ink)} .bar .b{background:var(--optB);color:var(--ink)} .bar .s{background:var(--sq);color:var(--sq-ink)}
+.srow.pred .bar{opacity:.92;outline:1.5px dashed var(--axis);outline-offset:2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.8rem;color:var(--ink-2)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.legend .dia{width:10px;height:10px;border:2px solid var(--paper-mk);transform:rotate(45deg);border-radius:1px;background:transparent}
+.legend .dia2{width:10px;height:10px;transform:rotate(45deg);border-radius:1px;background:var(--paper-mk)}
+.legend .circ{border-radius:50%;background:var(--us)}
+.legend .ring{border-radius:50%;border:2px solid var(--us);background:transparent}
+.legend .rng{width:18px;height:6px;border-radius:3px;background:var(--us-soft)}
+.legend .runs{border-radius:50%;background:var(--us-run);width:8px;height:8px}
+
+/* steps */
+ol.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:s}
+ol.steps li{counter-increment:s;display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;align-items:start}
+ol.steps li::before{content:counter(s);font:600 .9rem var(--mono);width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent)}
+ol.steps b{display:block;color:var(--ink)} ol.steps span{color:var(--ink-2);font-size:.92rem}
+.flow{display:grid;gap:10px}
+.frow{display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
+.frow .fl{display:flex;justify-content:space-between;gap:8px;font-size:.86rem}
+.frow .fb{height:14px;border-radius:4px;background:var(--accent)}
+.frow.drop .fb{background:var(--sq)}
+
+/* tables */
+.tscroll{overflow-x:auto;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--hair);white-space:nowrap}
+th{font-size:.74rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);background:var(--surface-2)}
+td.r,th.r{text-align:right}
+tr:last-child td{border-bottom:0}
+tr.gh td{background:var(--surface-2);font-weight:600;color:var(--ink-2);font-size:.78rem}
+tr.hl td{background:var(--accent-soft)}
+details{font-size:.86rem}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;margin-top:8px}
+details .tscroll{margin-top:8px}
+
+/* charts */
+.chart{display:block;width:100%;height:auto;overflow:visible}
+.chart text{font-family:var(--sans);fill:var(--ink-2);font-size:12px}
+.chart .tick{fill:var(--muted);font-size:11px;font-family:var(--mono)}
+.chart .grp{fill:var(--ink);font-weight:700;font-size:11.5px;letter-spacing:.02em}
+.chart .grid{stroke:var(--hair);stroke-width:1}
+.chart .zero{stroke:var(--axis);stroke-width:1.5}
+.chart .hair{stroke:var(--hair)}
+.chart .base{stroke:var(--axis)}
+.chart .range{stroke:var(--us-soft);stroke-width:7;stroke-linecap:round}
+.chart .run{fill:var(--us-run)}
+.chart .mk-us{fill:var(--us);stroke:var(--surface);stroke-width:2}
+.chart .mk-ring{fill:var(--surface);stroke:var(--us);stroke-width:2.2}
+.chart .mk-paper{fill:none;stroke:var(--paper-mk);stroke-width:1.6}
+.chart .mk-paper2{fill:var(--paper-mk);stroke:var(--surface);stroke-width:1.5}
+.chart .lane{fill:var(--muted);font-size:10px;letter-spacing:.04em}
+.chart .hit{fill:transparent}
+.chart .hit:hover{fill:var(--surface-2);fill-opacity:.6}
+.chart .ref{stroke:var(--crit-ink);stroke-dasharray:4 3;stroke-width:1.3}
+.chart .shade{fill:var(--shade)}
+.chart .reflab{fill:var(--crit-ink);font-size:11px;font-weight:600}
+.chart .t1{fill:var(--t1)} .chart .t2{fill:var(--t2)} .chart .t3{fill:var(--t3)}
+.chart .area{fill:var(--us-soft)} .chart .line{fill:none;stroke:var(--us);stroke-width:2}
+.chart .q{stroke:var(--ink-2);stroke-dasharray:2 3;stroke-width:1.2}
+.chart .val{fill:var(--ink);font-family:var(--mono);font-size:11.5px}
+.chart .xl{fill:var(--muted);font-size:11.5px}
+.chart .labn{font-size:11px}
+.dens{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+@media (max-width:900px){.dens{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.dens{grid-template-columns:minmax(0,1fr)}}
+.dens h4{margin:0 0 4px;font:600 .8rem var(--sans);color:var(--ink)}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--hair);
+  box-shadow:var(--shadow);border-radius:8px;padding:8px 10px;font-size:.8rem;line-height:1.45;max-width:280px}
+#tip b{font-weight:700} #tip .num{font-size:.78rem}
+
+/* findings */
+.findings{display:grid;gap:14px}
+.find{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:18px;display:grid;gap:10px}
+.find .fh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;justify-content:space-between}
+.find p{color:var(--ink-2);max-width:78ch}
+.find ul{margin:0;padding-left:1.1em;color:var(--ink-2);display:grid;gap:4px;max-width:78ch}
+
+/* simulator */
+.sim{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:640px){.sim{grid-template-columns:minmax(0,1fr)}}
+.simopt{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:14px;display:grid;gap:10px}
+.simopt h4{margin:0;font:700 .95rem var(--sans);display:flex;align-items:center;gap:8px}
+.simopt .f{display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;align-items:center;font-size:.85rem;color:var(--ink-2)}
+.simopt select{width:100%}
+.score{font:500 .8rem var(--mono);color:var(--ink-2);line-height:1.6;border-top:1px solid var(--hair);padding-top:8px}
+.score b{color:var(--ink)}
+pre{background:var(--surface-2);border-radius:10px;padding:14px 16px;overflow-x:auto;font:.84rem/1.55 var(--mono);margin:0}
+footer{padding-block:36px 56px;color:var(--muted);font-size:.85rem}
+footer .wrap{display:grid;gap:8px}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <div class="eyebrow">ECON S5560 · Team 3 · Replication checkpoint</div>
+    <h1>Does putting a dollar figure on it change the decision?</h1>
+    <p class="sub">We rebuilt the main results of a choice experiment with New Zealand councillors, asking whether showing dollar values for some impacts of a development tilts decisions toward those impacts. Every number below comes from the authors' own data file, re-estimated by us.</p>
+    <p class="cite">Paper: Eppink, F. V., Winden, M., Wright, W. C. C., &amp; Greenhalgh, S. (2016). Non-market values in a cost-benefit world: Evidence from a choice experiment. <i>PLoS ONE, 11</i>(10), e0165365. <a href="https://doi.org/10.1371/journal.pone.0165365" target="_blank" rel="noopener">doi.org/10.1371/journal.pone.0165365</a></p>
+    <div class="status" id="status"></div>
+  </div>
+</header>
+
+<nav class="sections" aria-label="Sections">
+  <div class="wrap">
+    <a href="#question">The question</a><a href="#experiment">The survey card</a><a href="#data">The data</a>
+    <a href="#raw">Raw pattern</a><a href="#result">Table 3</a><a href="#size">Effect size</a>
+    <a href="#findings">What we found</a><a href="#simulate">Try the model</a><a href="#reproduce">Reproduce</a>
+  </div>
+</nav>
+
+<main>
+<section class="block" id="question"><div class="wrap">
+  <div class="head"><div class="eyebrow">The question</div><h2>Some impacts come with a price tag. Others don't.</h2></div>
+  <div class="two">
+    <div class="prose">
+      <p>When a council decides whether to rezone farmland for housing, the benefits arrive with a number attached: <strong>new rates revenue for the district</strong>. The costs often don't: <strong>a murkier stream</strong>, or a historic tavern that loses its open views.</p>
+      <p>The authors ran an online survey of the people who actually make these calls: <strong>regional and district councillors and council staff</strong> in New Zealand. Each person imagined a town of 20,000 growing by 4% a year and picked between two development plans and "keep things as they are", four times over.</p>
+      <p>The key move: people were <strong>randomly split into three groups</strong> that saw the same plans with different information. Because the split was random, any difference in choices between groups can be traced to the information itself.</p>
+    </div>
+    <div class="panel">
+      <h3>The paper's answer</h3>
+      <p class="cap">As stated in the abstract and results</p>
+      <div class="prose">
+        <p>Showing revenue in dollars made development options <strong>more</strong> attractive. Showing water-quality losses in dollars made people <strong>avoid</strong> polluted outcomes more strongly. Cultural heritage, which was never priced, barely registered.</p>
+        <p class="callout">If only some impacts get a dollar value, decisions may tilt toward those impacts. That matters for every cost–benefit analysis that leaves nature or culture unpriced.</p>
+      </div>
+    </div>
+  </div>
+  <div class="treats" id="treats"></div>
+</div></section>
+
+<section class="block" id="experiment"><div class="wrap">
+  <div class="head"><div class="eyebrow">The survey card</div><h2>What respondents actually saw</h2>
+    <p class="lede">There were 12 cards in total, and each respondent got a random 4. Pick a card and a group to see the card as that group saw it, and what people in each group actually chose.</p></div>
+  <div class="controls">
+    <div class="ctl"><label for="cardSel">Card</label><select id="cardSel"></select></div>
+    <div class="ctl"><span class="lab" id="tLab">Group</span><div class="seg" id="cardTreat" role="group" aria-labelledby="tLab"></div></div>
+  </div>
+  <div class="card" id="surveyCard"></div>
+  <div class="panel">
+    <h3>What people picked on this card</h3>
+    <p class="cap">Observed choices by group (the 164 people who answered all four cards). The dashed row shows what our corrected model predicts for the selected group.</p>
+    <div class="legend" style="margin-bottom:10px"><span><i style="background:var(--optA)"></i>Option A</span><span><i style="background:var(--optB)"></i>Option B</span><span><i style="background:var(--sq)"></i>Keep as is</span></div>
+    <div class="shares" id="cardShares"></div>
+  </div>
+</div></section>
+
+<section class="block" id="data"><div class="wrap">
+  <div class="head"><div class="eyebrow">The data</div><h2>From the authors' raw file to the paper's sample</h2>
+    <p class="lede">The paper's supplement is one Stata file. Before any model can be run, it has to be understood, cleaned, and cut down to exactly the people the authors used. This is the parsing step, done in <span class="mono">01_parse_data.py</span>.</p></div>
+  <div class="two">
+    <ol class="steps" id="steps"></ol>
+    <div class="panel">
+      <h3>Who ends up in each model</h3>
+      <p class="cap">Respondents; one respondent = 12 rows in the data</p>
+      <div class="flow" id="flow"></div>
+    </div>
+  </div>
+  <div class="panel">
+    <h3>One respondent, as the data stores them</h3>
+    <p class="cap" id="exCap"></p>
+    <div class="tscroll"><table id="exTable"></table></div>
+  </div>
+</div></section>
+
+<section class="block" id="raw"><div class="wrap">
+  <div class="head"><div class="eyebrow">Before any model</div><h2>The raw pattern already points the paper's way</h2>
+    <p class="lede">The simplest check: when an option appeared on a card, how often was it picked, split by group? No regression, just counting.</p></div>
+  <div class="legend" id="tLegend"></div>
+  <div class="two">
+    <div class="panel"><h3>Options with each water-quality level</h3><p class="cap">% of times the option was picked when it was on the card</p><div id="chWater"></div></div>
+    <div class="panel"><h3>“Keep things as they are”</h3><p class="cap">% of cards where the status quo was picked</p><div id="chSQ"></div></div>
+  </div>
+  <div class="panel"><h3>Options with each development level</h3><p class="cap">% of times the option was picked when it was on the card</p><div id="chDev"></div>
+    <details><summary>Show all numbers</summary><div class="tscroll"><table id="ratesTable"></table></div></details></div>
+  <p class="callout" id="rawTake"></p>
+</div></section>
+
+<section class="block" id="result"><div class="wrap">
+  <div class="head"><div class="eyebrow">The main result</div><h2>Table 3, replicated</h2>
+    <p class="lede">Each number is a <strong>coefficient</strong>: how strongly a feature pulls someone toward an option, compared with keeping things as they are. Positive means more attractive, negative means less. Only signs and relative sizes carry meaning; the units are arbitrary. The bottom rows are the paper's question: the <em>extra</em> pull when a dollar figure was shown.</p></div>
+  <div class="controls">
+    <div class="ctl"><span class="lab" id="mLab">Model</span><div class="seg" id="modelSeg" role="group" aria-labelledby="mLab"></div></div>
+  </div>
+  <div class="panel">
+    <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
+      <h3 id="mTitle"></h3><div id="mStats" class="small muted"></div>
+    </div>
+    <p class="cap" id="mNote"></p>
+    <div class="legend" id="mLegend" style="margin-bottom:6px"></div>
+    <div id="chCoef"></div>
+  </div>
+  <div class="tscroll"><table id="coefTable"></table></div>
+  <div class="panel">
+    <h3>Figure 2, replicated: each councillor's own “$ shown” effect</h3>
+    <p class="cap">The mixed logit gives every respondent their own coefficients. These are the respondent-level estimates from model 4 (Councillors), which the paper's text names as the source of its Figure 2. Dotted lines mark the middle 95% of respondents. The published figure itself matches model 3; a model 3 version in the paper's layout is in output/paper_figures.</p>
+    <div class="dens" id="dens"></div>
+  </div>
+</div></section>
+
+<section class="block" id="size"><div class="wrap">
+  <div class="head"><div class="eyebrow">Comparing across models</div><h2>How much stronger does a preference get when a price is shown?</h2>
+    <p class="lede">Raw coefficients can't be compared across models because each model has its own scale. Dividing each “$ shown” effect by its baseline effect cancels the scale, leaving a plain percentage: how much stronger the pull (or push) becomes once a dollar figure is attached. Each row has two lanes, one per model family, with the paper's value beside ours.</p></div>
+  <div class="panel">
+    <div class="legend" id="sLegend" style="margin-bottom:6px"></div>
+    <div id="chRel"></div>
+  </div>
+  <p class="callout" id="relTake"></p>
+</div></section>
+
+<section class="block" id="findings"><div class="wrap">
+  <div class="head"><div class="eyebrow">Appraisal notes</div><h2>What the replication turned up</h2>
+    <p class="lede">Reproducing the numbers exactly showed us <em>how</em> they were produced, including a few things the paper does not say.</p></div>
+  <div class="findings" id="findList"></div>
+</div></section>
+
+<section class="block" id="simulate"><div class="wrap">
+  <div class="head"><div class="eyebrow">Try the model</div><h2>Build a card and predict the choice</h2>
+    <p class="lede">Set up two plans, choose what information is shown, and the fitted model predicts how the group would split. This is how the regression turns attributes into choices: each option gets a score, and higher-scoring options are picked more often.</p></div>
+  <div class="controls">
+    <div class="ctl"><span class="lab" id="sgLab">Information shown</span><div class="seg" id="simTreat" role="group" aria-labelledby="sgLab"></div></div>
+    <div class="ctl"><span class="lab" id="ssLab">Respondents</span><div class="seg" id="simSample" role="group" aria-labelledby="ssLab"></div></div>
+  </div>
+  <div class="sim" id="simOpts"></div>
+  <div class="panel">
+    <h3>Predicted choice shares</h3>
+    <p class="cap">From our corrected conditional logit (one group per person per card). The status quo scores 0 by construction.</p>
+    <div class="shares" id="simOut"></div>
+  </div>
+</div></section>
+
+<section class="block" id="reproduce"><div class="wrap">
+  <div class="head"><div class="eyebrow">Reproduce</div><h2>Every number comes from a script</h2>
+    <p class="lede">The pipeline is eight short Python scripts plus an R cross-check. Running them in order rebuilds every table, figure and this page from the raw data file.</p></div>
+  <div class="tscroll"><table id="files"></table></div>
+  <pre>pip install -r requirements.txt
+python run_all.py              # steps 1-8, about 6 minutes (the mixed logit is the slow part)
+Rscript crosscheck_clogit.R    # optional: re-estimates models 1-2 in R</pre>
+  <p class="small muted" id="meta"></p>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <div>Team 3: Daniel T., Alistair K., Matthew S., Sam W. · ECON S5560 Applied Economics Project, Fall 2026.</div>
+  <div>Data: S1 Table of Eppink et al. (2016), CC BY 4.0. AI use: code and this page were drafted with an AI coding assistant (Claude). Every estimate was checked against the published tables and re-run independently in R.</div>
+</div></footer>
+<div id="tip" hidden></div>
+
+<script>
+const DATA = {"meta":{"built":"2026-11-09","python":"3.12.16","pandas":"2.3.3","numpy":"1.26.4","scipy":"1.13.1","statsmodels":"0.14.6"},"vars":[{"key":"dev_limited","label":"Development: Limited","group":"main"},{"key":"dev_high","label":"Development: Residential","group":"main"},{"key":"dev_com","label":"Development: Commercial","group":"main"},{"key":"wat_med","label":"Water quality: Medium","group":"main"},{"key":"wat_low","label":"Water quality: Low","group":"main"},{"key":"cult_s","label":"Cultural: Stables","group":"main"},{"key":"cult_sl","label":"Cultural: Stables & landscape","group":"main"},{"key":"lim_money","label":"Limited \u00d7 $ shown","group":"treat"},{"key":"res_money","label":"Residential \u00d7 $ shown","group":"treat"},{"key":"com_money","label":"Commercial \u00d7 $ shown","group":"treat"},{"key":"med_money","label":"Medium water \u00d7 $ shown","group":"treat"},{"key":"low_money","label":"Low water \u00d7 $ shown","group":"treat"}],"paper":{"m1":{"name":"(1) CL \u00b7 All","ll":-852.9,"n":1968,"coef":[4.26,4.553,4.112,-3.954,-6.135,-0.822,-1.672,0.205,0.67,0.308,-0.473,-0.919],"p":[0.0,0.0,0.0,0.0,0.0,0.08,0.031,0.452,0.018,0.282,0.076,0.082]},"m2":{"name":"(2) CL \u00b7 Councillors","ll":-647.0,"n":1476,"coef":[4.114,4.545,4.184,-0.393,-0.602,-0.758,-1.85,0.084,0.647,0.254,-0.299,-0.592],"p":[0.0,0.0,0.0,0.0,0.0,0.15,0.001,0.79,0.058,0.433,0.323,0.286]},"m3":{"name":"(3) ML \u00b7 All","ll":-421.92,"n":1968,"coef":[6.819,6.259,6.387,-7.324,-14.95,-1.239,-2.765,1.29,3.222,1.754,-2.272,-4.305],"p":[0.002,0.006,0.002,0.0,0.0,0.294,0.08,0.187,0.015,0.082,0.064,0.018]},"m4":{"name":"(4) ML \u00b7 Councillors","ll":-316.4,"n":1476,"coef":[6.878,6.554,6.663,-7.578,-19.02,-2.131,-2.366,2.65,3.45,2.225,-2.085,-8.649],"p":[0.011,0.013,0.005,0.0,0.001,0.244,0.164,0.109,0.062,0.166,0.135,0.015]}},"cl":{"m1":{"paper_spec":{"coef":[4.259885142700685,4.553157210928988,4.112121188533487,-3.9539300171943834,-6.135029916134354,-0.821859346256138,-1.6728512616325073,0.20487836187007735,0.6992416702215923,0.307633321956505,-0.47302692822676445,-0.9191246625034921],"se":[0.6669828973899516,0.6929219351086336,0.5182159200828341,0.34234014623664316,0.5201911553441233,0.469199947355837,0.5159695119371661,0.2722403861336938,0.2951202085088959,0.28589828430069736,0.2665803425432809,0.5283181963102741],"p":[1.693949801383082e-10,4.999436449344098e-11,2.102406461856879e-15,7.4068415504119e-31,4.201518613652832e-32,0.07983941527352814,0.0011863099313243843,0.4517118517112829,0.017819609504666645,0.2819166692621442,0.07599281322373368,0.08190855152880393],"ll":-852.9190685893482,"n":1968,"groups":12},"corrected":{"coef":[2.235116965336472,2.337106472637807,2.174344818081245,-2.2272156385429267,-3.817974469553233,-0.40632247567132995,-0.9986409768728927,0.3972197583797725,0.8359414407917104,0.5122820733765735,-0.5840907681630133,-1.0232357736776294],"se":[0.5870240147735579,0.5927162108170724,0.4567482190408402,0.2847750044689195,0.44930379789322844,0.4145157020797953,0.4521481454893463,0.2839178879699382,0.30910567261795774,0.3020933894417101,0.2870710638441012,0.5332911730758297],"p":[0.0001403564787848102,8.045367600577933e-05,1.931245747190746e-06,5.241948696468477e-15,1.936601539493095e-17,0.3269705167659125,0.027198382698521983,0.16179330366235523,0.006843048785592299,0.08992871450696027,0.041885531471788584,0.05501993711365971],"ll":-485.17813293163954,"n":1968,"groups":656,"se_cl":[0.6580799810233989,0.5868017408373835,0.5016534412262081,0.32293410781874343,0.46728536722861763,0.4225066495805327,0.4118056810824957,0.3625847038210121,0.4042358392640213,0.3922025700667427,0.33831283412574514,0.6216551851409055],"p_cl":[0.0006827314903464418,6.81117336029777e-05,1.461871566025074e-05,5.318270921516767e-12,3.0700839867712195e-16,0.3362029021377213,0.015307137533717057,0.2732877246852924,0.03864427439274371,0.19149575588440004,0.0842608678583576,0.09976662745786856]},"null_ll_occasion":-720.68966136628},"m2":{"paper_spec":{"coef":[4.114594295631968,4.544954213904597,4.184202158392042,-3.891206963678668,-6.184222879732493,-0.7580578229165884,-1.8495170250738329,0.08384194784157407,0.6467709007013936,0.25428821184842565,-0.29884931107532403,-0.5924644298820131],"se":[0.7558028363812641,0.7828775339296102,0.5875001556574762,0.39264629123130823,0.6016835582339272,0.5269794536832213,0.5817352347833586,0.31523465187607397,0.34058262523573224,0.32463175421407664,0.30222975277062264,0.5556755646143833],"p":[5.209580487853571e-08,6.419441946276193e-09,1.0633783285936091e-12,3.758576147000006e-23,8.836402566721602e-25,0.15029337874406,0.0014762578698362678,0.7902647873348099,0.05756274057979614,0.433443442169252,0.32275366699125807,0.28633068594918054],"ll":-646.9807511024007,"n":1476,"groups":12},"corrected":{"coef":[2.250192454214524,2.4034784313446798,2.2872559755992823,-2.2510414651591373,-3.927451805776672,-0.40156547283314187,-1.138469465234186,0.25016145072914114,0.7540347427515475,0.42889814616150457,-0.3637768336243387,-0.6448696587961068],"se":[0.6623368891449296,0.6691576829389753,0.5150059550647029,0.3268464254019157,0.5170485508390222,0.4621129949167754,0.505465695467399,0.32713170179935663,0.35741405846239543,0.3428916690807829,0.3252537989196691,0.5589511466851669],"p":[0.000680410445421789,0.0003284058648067916,8.944929374929982e-06,5.6919841200352774e-12,3.056480975385357e-14,0.38485981896237353,0.024302185846555722,0.4444432177415789,0.034884613586679866,0.21099761422088115,0.263379151765577,0.24861751890677442],"ll":-372.2188676687234,"n":1476,"groups":492,"se_cl":[0.7303021847620639,0.6361748600527383,0.5606025738057042,0.3609006612510591,0.5343585967077292,0.46292428488335624,0.4472115588252827,0.4224128865721983,0.4627542785671141,0.46982629686480726,0.3860435987957824,0.6602308022802474],"p_cl":[0.00206181995207724,0.00015808309274030109,4.5036573590279325e-05,4.452210673659477e-10,1.9843976038410908e-13,0.38569336433124746,0.010905677426839457,0.5537031341066878,0.10321789035982346,0.3613021684938589,0.3460285271820859,0.32870101837012644]},"null_ll_occasion":-540.5172460247101}},"cl_relative":{"m1":{"paper":{"lim_money":0.04812206572769953,"res_money":0.14715572150230619,"com_money":0.07490272373540856,"med_money":0.11962569549822963,"low_money":0.1497962510187449},"paper_spec":{"lim_money":0.04809480889904662,"res_money":0.15357292485820515,"com_money":0.07481134622547854,"med_money":0.11963462331647776,"low_money":0.14981584035740564},"corrected":{"lim_money":0.17771766065941674,"res_money":0.3576822239716848,"com_money":0.23560295916111312,"med_money":0.2622515566319986,"low_money":0.26800487584123767}},"m2":{"paper":{"lim_money":0.020418084589207585,"res_money":0.14235423542354236,"com_money":0.06070745697896749,"med_money":0.7608142493638677,"low_money":0.9833887043189369},"paper_spec":{"lim_money":0.020376722908156522,"res_money":0.14230526211302555,"com_money":0.06077340487443053,"med_money":0.0768011863323759,"low_money":0.09580256750184284},"corrected":{"lim_money":0.11117335775462155,"res_money":0.3137264445221944,"com_money":0.18751646109444714,"med_money":0.16160379062525243,"low_money":0.1641954352813709}}},"ml":{"m3":{"primary":{"coef":[7.197102890760526,6.778450255632949,6.581005152990924,-7.553689845123596,-14.589009047204902,-1.7468063031034506,-2.9538429484196085,1.7401367250472202,2.976389175009778,1.5211715090021996,-1.6558284494442026,-6.978343582861943],"se":[2.3547232010486154,2.268846801017398,1.9144811168717717,1.9896786702397302,4.337472083245684,1.3217361354105646,1.4810255374195396,1.1387278191058463,1.4410441870356845,1.0357933155989665,1.2589418266025847,3.0307342701787596],"p":[0.002239719252544999,0.0028115963396102054,0.0005871375417170843,0.0001467906080704931,0.000769658700052742,0.1863014271204021,0.04610204635460053,0.12647752134162235,0.038881461300977964,0.14193988801066537,0.18842450519221265,0.021305543141730665],"sd":[1.7851080309886644,2.2795377181289544,0.5930463832511847,3.4694735502928764,5.810388756184812,3.7327088409475095,4.923929663602186,0.8779545746033137,1.9611463280982435,2.439197394162258,0.36432995645128785,5.17557339859842],"sd_se":[0.8664862684487589,1.1906224727961001,1.0631476152266444,1.0183534523498923,1.93631149466911,1.1299939822547937,1.273364663557766,1.8224295477687542,1.1070675695534686,1.0943440058568175,1.377711704357443,2.8177855047646196],"ll":-425.3577013318784,"draws":2000,"converged":true},"relative":{"paper":{"lim_money":0.18917729872415312,"res_money":0.5147787186451509,"com_money":0.27462032253013935,"med_money":0.31021299836155103,"low_money":0.28795986622073577},"median":{"lim_money":0.21688122928226333,"res_money":0.517310354078752,"com_money":0.2428806482972108,"med_money":0.24151760179878212,"low_money":0.3581155074350041},"min":{"lim_money":0.11637338052942842,"res_money":0.3938760344579443,"com_money":0.1593274533238988,"med_money":0.10600895917925379,"low_money":0.12979215518382406},"max":{"lim_money":0.40469496807858013,"res_money":0.8655424333199435,"com_money":0.31044110141309894,"med_money":0.38640896394536906,"low_money":0.5874505240513626}},"runs":[{"ll":-425.89942501734004,"coef":[5.747781822515428,5.691891958527351,6.209399024912572,-6.974483671162372,-14.63477335754798,-1.0577987596065992,-1.9676190058563794,2.162616241371093,2.5150864661983268,1.2165159937701486,-1.9990253133732474,-3.6459955670931725]},{"ll":-425.5870754603006,"coef":[7.692506701415207,7.442638577160313,7.501908000587115,-8.153421988115861,-16.672256787054096,-2.165144616013347,-3.4122013936482007,2.431709444721427,3.0477438888633848,1.8324898513227972,-2.1943980628592197,-9.794125986673814]},{"ll":-421.89038981379656,"coef":[13.724572612687542,11.511097537255841,13.374180709804282,-15.603558860138145,-37.83744425895032,-0.16779157430901032,-4.378195919853781,1.7873624861761725,7.594038605233883,2.1308741527867294,-5.460559584700035,-4.911003437016973]},{"ll":-421.3096132088257,"coef":[8.556934481757077,8.955593131418237,8.637980464721538,-10.090084087977209,-19.404084341193226,-1.6224867457975671,-2.9984608073295957,2.383824325058828,3.5273935088218185,1.9735702651974283,-1.8750225188469938,-6.843241778290382]},{"ll":-418.36767098262203,"coef":[12.434695893401251,14.042125377458952,12.294108605079236,-15.609199853395596,-37.255452077363124,-2.9306038742688543,-5.620849918625869,5.0322588576468705,6.001977753899305,3.3441422238958287,-2.4679017410721427,-13.544623527685479]},{"ll":-423.83959338057207,"coef":[8.277326579622434,6.853772939754404,6.87840588655069,-8.266273917917996,-16.324701457226777,-1.578389646792984,-2.7655702991795144,1.231206026536551,3.787375941697699,1.8566646330933294,-2.0906478608002175,-4.114744352312463]},{"ll":-424.05496849601116,"coef":[9.394027890328928,6.228308336341243,7.775520467608538,-9.64501640522841,-19.518226333818156,-1.2974569995858307,-3.323505865673381,1.315537672963903,5.390865152903689,1.602446849763843,-2.245373238616236,-6.736718206943396]},{"ll":-424.515015730261,"coef":[9.213772741749883,8.908793637944044,9.445735427370288,-9.83581689857747,-21.955778901757757,-1.9356498320501783,-4.384175069980702,3.3233470338777917,4.263917038409436,2.4655777033240165,-3.800647817335673,-7.558343808154088]},{"ll":-426.82556385601436,"coef":[5.834054396740571,5.176138600922628,5.194200207809345,-6.372479032810236,-12.497298835384985,-1.117553370645941,-2.2180393338045534,1.4816580517920352,2.795618169247461,1.545516539621288,-1.435639150858125,-6.435118627914769]},{"ll":-425.33035017500555,"coef":[8.478371266071436,7.847945297050133,7.430697424436837,-8.333173458487922,-16.93326398108299,-2.311005150529536,-3.310525302362483,2.033382845995687,3.415379422776635,1.6821489560015777,-1.7478152259756574,-7.91878560020817]},{"ll":-422.882345631647,"coef":[11.94147601984984,9.847978618495798,10.211896868307486,-11.633757546098865,-25.017932956862143,-2.5620308337316113,-5.844749230497477,2.6374741436264197,7.29691298448296,2.869097667976619,-3.232320028431171,-8.354810038478078]},{"ll":-424.34106527943504,"coef":[6.995948018890712,5.775015075653453,6.188717858366792,-7.0829901420664685,-12.947129033581222,-1.366961302120519,-1.923553496175023,1.4894078115138476,2.784717644002191,1.2628610197422532,-1.7724036254453042,-6.359865047005008]},{"ll":-418.6281354723503,"coef":[13.130975132245272,12.4750461919439,12.049625301996304,-13.668952055808605,-29.009258294448408,-2.3289186920193585,-5.576696877206575,1.996480996773407,6.182200803327986,2.4748565753066436,-2.043458592735018,-8.721262857085888]},{"ll":-419.44778476002693,"coef":[11.203513112785007,8.20685764930669,9.722497452483045,-10.149029848318362,-21.14948335543897,-2.9890785883250675,-4.176559206398753,1.9578744657439773,5.225451655416957,2.042351681389168,-2.3046866847993277,-10.011929648142637]},{"ll":-420.67732459523353,"coef":[18.228160940533424,14.76088726018888,14.515357934682852,-15.828703234869963,-28.726497220809566,-6.660516871805166,-9.102522726829893,2.12127270948436,7.724774219871847,4.058638850576852,-1.6779843550858524,-12.94500122275773]},{"ll":-424.7799256527369,"coef":[8.700504597443208,7.309423255725091,7.5635965901436375,-8.372651637151924,-16.531193701034407,-2.434423435638031,-4.026598276298885,1.8211601306261427,4.323667107354694,1.9821139195456534,-1.705284700554542,-6.216138825926229]},{"ll":-423.81802606219884,"coef":[6.983602468272916,5.956440221550941,6.0745843430592075,-7.739502496899936,-13.350521595581913,-1.3164082480271158,-2.228667383996263,1.9626200283262156,3.684848125359326,1.8326343299352228,-1.5751330020379422,-7.278253875875116]},{"ll":-421.4633825081369,"coef":[8.914426415024264,7.4921882908307555,7.762591152915003,-8.720118569897398,-17.18106420166582,-2.3517989134734965,-3.7095048800689407,1.6647010442202534,3.856509524873824,1.8745994606844525,-2.5671476743511987,-6.6511177623285445]},{"ll":-424.1499579858258,"coef":[7.281983107361471,6.742600842034346,6.733020741786183,-7.286343702132321,-15.21824334479332,-1.9972388378492125,-2.917962043500516,1.453287692734492,3.0551371411628763,1.5115737130092155,-1.9576049713939263,-4.350796139283931]},{"ll":-420.09168635290223,"coef":[7.975422305482479,7.570494139649991,7.453416875415639,-9.338664423426497,-19.10222307993013,-1.4612735334306293,-2.7308185321981875,1.792686073666363,3.9357735339279767,2.3138469440950096,-2.919350255644951,-6.39211536737197]}]},"m4":{"primary":{"coef":[10.181343739347213,8.706823274415342,8.602503523574175,-10.150220272210747,-20.2302198384051,-2.8716456176372316,-4.181968918434156,1.445214444576344,4.119203392891927,1.9389875152498273,-1.3587687045501882,-3.052551611043504],"se":[4.898828853451286,4.176084088071551,3.799012984597474,4.485389507275825,10.657025255398686,2.0772051846317385,2.4232095057632344,1.668598534738457,2.6948694476750967,1.6746370656775922,1.8110651743548698,3.505270427585366],"p":[0.03767971224382772,0.03707608381481675,0.023549224397368028,0.023638660521472833,0.05765671239160269,0.16683160652425877,0.08438384891250171,0.38642176840155684,0.1263796572189916,0.24692306405656894,0.45309847872100983,0.38383810764944126],"sd":[2.668297698293707,0.2777904041270387,0.30299852322751164,4.4085830090492975,8.089541590540218,4.241065673732405,6.326396104296871,0.17331944528092566,4.593798272997334,3.4364802731176836,0.8742112654072572,3.1288389889631407],"sd_se":[2.034855224486961,1.52864798945679,1.8020144200845027,2.1331447290647274,4.763251495032637,1.8816368545489557,3.0108547320692707,1.1909478334348143,3.3750048768861878,2.599939574323617,2.64628684219236,4.039357320955931],"ll":-317.51749803145077,"draws":2000,"converged":true},"relative":{"paper":{"lim_money":0.38528642047106715,"res_money":0.526396093988404,"com_money":0.3339336635149332,"med_money":0.27513855898654,"low_money":0.45473186119873815},"median":{"lim_money":0.17536793653965166,"res_money":0.42261759708650815,"com_money":0.21996785096183188,"med_money":0.20950573277293078,"low_money":0.2587908243327317},"min":{"lim_money":0.06873639120339266,"res_money":0.16249081454421532,"com_money":-0.03920757664496456,"med_money":-0.001605813096038999,"low_money":0.0785822725538439},"max":{"lim_money":0.41256304488969087,"res_money":0.6478704676026023,"com_money":0.35221673575335677,"med_money":0.3401199775258443,"low_money":0.6573965050813458}},"runs":[{"ll":-312.79444173673204,"coef":[12.508403585989184,16.59274532300955,13.16325819347698,-15.93222730088746,-30.542021126327217,-3.609157734371537,-6.684465976213006,5.160505070144826,2.6961687030605406,2.927897888838955,-2.262726748983446,-2.442276161967717]},{"ll":-317.4233681682582,"coef":[9.132675773973247,7.528016082054441,7.803881068270857,-8.190712488364843,-16.660166485191848,-2.826100413836926,-3.7630979816696604,1.2651401672049185,3.5107992516526383,1.315510088315479,-1.6727225907821657,-3.0783159959517183]},{"ll":-314.4679270676012,"coef":[19.17744589916149,15.294199591731713,16.778777223849723,-17.802848131236292,-38.624614450046906,-3.8838066183395257,-10.187667707821792,2.189579327880159,9.811057264370092,2.763549011806458,-6.055104306292106,-17.316490550912327]},{"ll":-314.59100544577825,"coef":[11.620306284535078,9.104895965915013,9.961229404226168,-12.118223605980749,-22.730657152407804,-2.831435190657936,-4.469013773215325,1.583639650165911,5.8987932069104065,2.481049595134948,-0.5841014114077769,-7.850756537571497]},{"ll":-313.16696296252104,"coef":[11.126629337662333,11.130215797745455,9.820244380651628,-11.751912604354617,-23.795956212609553,-3.2596913436281043,-3.0105172812210843,3.0678721307715358,3.1189353572662357,2.488002664428794,-2.447245974919227,-5.839836193918276]},{"ll":-318.2790160170661,"coef":[10.68144893683451,10.28463859591039,9.13245479786217,-10.526934318641326,-22.016337869561998,-2.6112755075923357,-5.330724062648398,2.0204948990383476,3.9060287433257215,2.9037460413479734,-1.3638578978980413,-4.081876527472947]},{"ll":-315.59860946904337,"coef":[20.93284779085443,21.07523854912825,23.486375434070116,-24.58572501062319,-44.576506789424656,-4.452055967706279,-9.803142854432483,5.689068460583622,6.684415561328568,-0.9208438649437168,-3.5642277981852377,-29.304439772102654]},{"ll":-310.9325639436288,"coef":[16.13170661560158,16.031685385109654,15.324989198469993,-14.762603830855758,-28.42341377973844,-4.872931304164305,-9.00075321507904,3.0441479514054675,5.013695455425072,2.2617097061579803,-3.014984458502612,-6.369037402285495]},{"ll":-313.79736436431034,"coef":[25.29640344765998,25.025507595676718,21.97722630518012,-26.866377627587866,-44.13737467642253,-6.274872980308762,-13.743924736488168,2.733972342918007,8.420953713930723,6.410994514658243,0.04314238103750977,-14.63882266085819]},{"ll":-320.4788066193547,"coef":[7.130127920886831,6.698110050648996,6.528327540624983,-7.023289458590489,-14.845801218285843,-2.2023537634856503,-3.2994624161030757,1.5871415041616088,2.681597969117416,1.5872026169334963,-1.580034441117006,-4.04056216008551]},{"ll":-311.53154971815,"coef":[19.099702741793674,16.8466570993835,16.291995458701948,-18.883318783914945,-38.22854475651882,-5.273084889554368,-8.655959353340245,3.793323941564545,8.157609443371744,3.4081876460117733,-3.9725351362153996,-16.22734664970233]},{"ll":-309.52611403325557,"coef":[15.218817451898298,13.973229764138743,14.215913395438635,-14.897498406337007,-31.301199182087565,-4.066393992323405,-6.248057185963849,1.9647158961964326,5.321270182806144,1.8801295377238834,-3.9149685441367823,-12.375976045681275]},{"ll":-315.3684826622539,"coef":[12.161198723950159,11.68805315224452,10.863041303842195,-11.557430581477135,-27.81826700800149,-2.6816062139916133,-4.088350720774004,1.7531685081550223,4.365264133243548,2.3627780709397674,-2.6081485972117364,-4.668090263069474]},{"ll":-311.86679734191097,"coef":[23.393991085985153,20.574799266169133,20.24525159161984,-20.23040604540524,-52.457966487771955,-9.040457826094196,-12.706247704057123,5.161736330838272,9.153394046210893,6.447140596761554,-4.399875346454638,-19.057969118463863]},{"ll":-318.02915752424366,"coef":[7.652724900429419,8.84097030652009,7.262645985580961,-9.054108589695344,-21.15346577588193,-2.1016243136631108,-3.851772948236344,3.1182056299215213,2.1171933974430233,2.5580254619735467,-2.4264362931621237,-7.215671606666728]},{"ll":-311.70341383233307,"coef":[22.235030007120887,18.118147618827322,19.212829108996477,-20.59792449794826,-40.39310262463799,-6.209272467819943,-9.276715838301431,3.602741677391952,9.405240098083192,3.97872649932011,-4.8361007243874425,-13.27670082000511]},{"ll":-316.33269661480534,"coef":[11.414916425154876,11.439543620665898,10.775343924510771,-10.494992244539603,-26.0466050284172,-3.752214339330797,-6.666898335206041,2.658784770832639,5.887605738398514,2.417490878894701,-2.186842534581219,-6.162225190681749]},{"ll":-315.17011693175675,"coef":[9.400542812862547,8.028452146353128,8.061491256523212,-9.235648298099463,-18.954993522060906,-1.9548508990715392,-4.013475354892618,0.6461593883091612,3.6941859247909314,1.3268206314468391,-1.9808687880302718,-4.283904812607921]},{"ll":-312.13196100454536,"coef":[15.17148679331469,12.61718564349283,14.28719090541675,-13.817363007377041,-33.91274559380683,-5.322426219104806,-7.213786631465215,2.1244916726687055,6.504216976470548,1.1705956644364157,-2.88283728386742,-2.664940617301697]},{"ll":-312.55222465213023,"coef":[18.263037997825734,17.237978580991026,16.92517493205538,-16.846366115930127,-46.83569244404578,-5.041627337578269,-8.965067350687166,2.527640694952477,10.02164568102109,4.461786813944726,-5.412001897696622,-5.440396934739864]}]}},"fig2":{"lim_money":{"grid":[0.8410300012439937,0.8506644439389691,0.8602988866339445,0.8699333293289199,0.8795677720238952,0.8892022147188707,0.8988366574138461,0.9084711001088215,0.9181055428037969,0.9277399854987722,0.9373744281937476,0.947008870888723,0.9566433135836984,0.9662777562786737,0.9759121989736491,0.9855466416686245,0.9951810843636,1.0048155270585752,1.0144499697535507,1.024084412448526,1.0337188551435015,1.0433532978384767,1.0529877405334522,1.0626221832284277,1.072256625923403,1.0818910686183785,1.0915255113133537,1.1011599540083292,1.1107943967033045,1.12042883939828,1.1300632820932552,1.1396977247882307,1.1493321674832062,1.1589666101781815,1.1686010528731567,1.1782354955681322,1.1878699382631077,1.197504380958083,1.2071388236530585,1.2167732663480337,1.2264077090430092,1.2360421517379847,1.24567659443296,1.2553110371279352,1.2649454798229107,1.2745799225178862,1.2842143652128615,1.293848807907837,1.3034832506028122,1.3131176932977877,1.322752135992763,1.3323865786877385,1.3420210213827137,1.3516554640776892,1.3612899067726647,1.37092434946764,1.3805587921626152,1.3901932348575907,1.3998276775525662,1.4094621202475417,1.419096562942517,1.4287310056374922,1.4383654483324677,1.4479998910274432,1.4576343337224185,1.4672687764173937,1.4769032191123692,1.4865376618073447,1.49617210450232,1.5058065471972952,1.5154409898922707,1.5250754325872462,1.5347098752822217,1.544344317977197,1.5539787606721722,1.5636132033671477,1.5732476460621232,1.5828820887570985,1.5925165314520737,1.6021509741470492,1.6117854168420247,1.6214198595370002,1.6310543022319755,1.6406887449269507,1.6503231876219262,1.6599576303169017,1.669592073011877,1.6792265157068522,1.6888609584018277,1.6984954010968032,1.7081298437917785,1.717764286486754,1.7273987291817292,1.7370331718767047,1.7466676145716802,1.7563020572666554,1.7659364999616307,1.7755709426566062,1.7852053853515817,1.794839828046557,1.8044742707415322,1.8141087134365077,1.8237431561314832,1.8333775988264587,1.843012041521434,1.8526464842164092,1.8622809269113847,1.8719153696063602,1.8815498123013354,1.891184254996311,1.9008186976912862,1.9104531403862617,1.920087583081237,1.9297220257762124,1.9393564684711877,1.9489909111661632,1.9586253538611385,1.968259796556114,1.9778942392510894,1.9875286819460647],"density":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,7.2930722436635e-311,1.7922034224026498e-285,3.6196638511792095e-261,6.0083238121079186e-238,8.19676665679434e-216,9.190432822054792e-195,8.469026844970215e-175,6.414092306408085e-156,3.9924644099209804e-138,2.0424482085481208e-121,8.5874694210399485e-106,2.967450656069397e-91,8.427639696472127e-78,1.9671277535057995e-65,3.7736648181194014e-54,5.949743342321246e-44,7.70969667955154e-35,8.210706043916085e-27,7.186672718198986e-20,5.169867142807394e-14,3.0565749483121523e-09,1.4852339774224118e-05,0.005931434177114819,0.19472328172526704,0.5365571732951364,0.37791589702273554,0.49557244400632594,0.07653640541219411,0.0013696701994077684,0.052664505208040675,0.7711348958104595,1.757696291063029,1.3863199554821362,6.094969331597394,30.063459244726165,41.99222329664031,14.442589227251352,3.9286873252867456,0.8575079226809192,0.5567788809735409,0.19484444880669768,0.005931497828751104,1.4852342468456333e-05,3.0565749574838e-09,5.1698671430590924e-14,7.186672718204662e-20,8.210706043918755e-27,7.709696679554281e-35,5.949743342323614e-44,3.7736648181227797e-54,1.9671277535057995e-65,8.427639696472127e-78,2.967450656069397e-91,8.587469421034579e-106,2.042448208549398e-121,3.9924644099209804e-138,6.414092306408085e-156,8.469026844970215e-175,9.190432822062629e-195,8.196766656801328e-216,6.008323812113384e-238,3.619663851182914e-261,1.7922034224026498e-285,7.2930722436635e-311,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"p2_5":1.408767386795358,"p97_5":1.4655268972993287,"mean":1.4436639489114567},"res_money":{"grid":[-3.6305345040982546,-3.500717893440099,-3.3709012827819436,-3.2410846721237876,-3.111268061465632,-2.9814514508074765,-2.851634840149321,-2.7218182294911655,-2.5920016188330095,-2.4621850081748544,-2.3323683975166984,-2.202551786858543,-2.0727351762003874,-1.9429185655422316,-1.813101954884076,-1.6832853442259204,-1.5534687335677648,-1.4236521229096093,-1.2938355122514538,-1.1640189015932978,-1.0342022909351423,-0.9043856802769867,-0.7745690696188312,-0.6447524589606757,-0.5149358483025201,-0.3851192376443642,-0.25530262698620865,-0.12548601632805312,0.004330594330102411,0.13414720498825794,0.2639638156464139,0.393780426304569,0.523597036962725,0.6534136476208809,0.783230258279036,0.913046868937192,1.042863479595347,1.172680090253503,1.302496700911659,1.4323133115698141,1.56212992222797,1.6919465328861252,1.8217631435442811,1.9515797542024371,2.081396364860592,2.211212975518748,2.3410295861769033,2.4708461968350592,2.6006628074932143,2.7304794181513703,2.8602960288095263,2.9901126394676814,3.1199292501258373,3.2497458607839924,3.3795624714421484,3.5093790821003044,3.6391956927584594,3.7690123034166154,3.8988289140747705,4.0286455247329265,4.1584621353910824,4.2882787460492375,4.418095356707393,4.5479119673655495,4.677728578023705,4.80754518868186,4.9373617993400165,5.067178409998172,5.196995020656327,5.326811631314482,5.456628241972639,5.586444852630794,5.716261463288949,5.846078073947106,5.975894684605261,6.105711295263416,6.235527905921573,6.365344516579728,6.495161127237883,6.624977737896038,6.754794348554195,6.88461095921235,7.014427569870505,7.144244180528662,7.274060791186817,7.403877401844972,7.533694012503129,7.663510623161284,7.793327233819439,7.923143844477594,8.05296045513575,8.182777065793907,8.31259367645206,8.442410287110217,8.572226897768374,8.702043508426527,8.831860119084684,8.961676729742841,9.091493340400994,9.221309951059151,9.351126561717308,9.480943172375461,9.610759783033618,9.740576393691775,9.870393004349928,10.000209615008085,10.130026225666239,10.259842836324395,10.389659446982552,10.519476057640706,10.649292668298862,10.77910927895702,10.908925889615173,11.03874250027333,11.168559110931486,11.29837572158964,11.428192332247797,11.558008942905953,11.687825553564107,11.817642164222264],"density":[0.004126309257238424,0.004789609677079906,0.005422489253352716,0.005996037641748424,0.006484994187600047,0.006869332767353918,0.0071348347821858765,0.007272883227630034,0.007279962545941706,0.007157396992386418,0.006911684740165583,0.006555459905440856,0.00610877650531735,0.005600195687924545,0.005067150663164534,0.004555252256300606,0.004116491059884862,0.003806563968666627,0.003681700103806267,0.003795345148877814,0.004194920065631877,0.004918688487737592,0.005992646764562146,0.007427363053745507,0.009214855038894302,0.011325869437713043,0.013708223349207335,0.01628707551144666,0.01896800487892101,0.02164350788427282,0.02420297191841519,0.026545416730117705,0.02859348590689083,0.030306551129905643,0.03169060049891805,0.03280297816293106,0.03375102911381026,0.03468508978138414,0.03578769372296235,0.03726189897302572,0.039321915832731175,0.042188537350223,0.04609033258552862,0.051269496229752715,0.05798916392554092,0.06653743203155738,0.07722268625321217,0.09035538185155584,0.10621317235958316,0.12498914171687965,0.14672661683853927,0.17124823067328174,0.1980909462248064,0.22646172563051148,0.25522929306869624,0.28296489358235816,0.3080384869477554,0.32876682763572196,0.3435980468970266,0.3513064817420764,0.3511648436504132,0.3430610232530977,0.3275348423129185,0.30572457154104815,0.2792306274420217,0.24992004121689226,0.21970590206129412,0.19033855133065414,0.16323978968458921,0.1393999537164078,0.11934394618849084,0.10315975126078084,0.09057418953963386,0.0810566530845809,0.07393182923028299,0.06848560455048308,0.06405288317255069,0.0600807526109546,0.05616463039564319,0.05205851729453247,0.04766325489936442,0.042998701480048786,0.038166868205772975,0.0333131430032634,0.028591736266051014,0.02413960313278322,0.020060750791533764,0.01642056324339759,0.013248055897184577,0.010543093846044536,0.008285588845374706,0.006444315414548879,0.004983916485688724,0.00386957216305735,0.00306946029433374,0.0025554740627676247,0.002302736324523901,0.002288383413713752,0.0024899971552277194,0.0028840043782281,0.003444336448924696,0.00414160487967366,0.004942959551127853,0.005812643860538287,0.006713083246074124,0.007606209125933377,0.008454695519849436,0.009222896037344388,0.009877478524376265,0.010387974270779563,0.010727582140185644,0.01087452077714408,0.010813999558836107,0.010540555329827854,0.010060203704610788,0.00939170877269509,0.008566359375655211,0.00762594530799539,0.006619062016586798,0.005596299230495208],"p2_5":0.5233200120791518,"p97_5":7.55211781279733,"mean":4.091603662650612},"com_money":{"grid":[-2.9841766650260895,-2.9076486769353607,-2.831120688844632,-2.754592700753903,-2.6780647126631743,-2.6015367245724454,-2.5250087364817166,-2.4484807483909874,-2.3719527603002586,-2.29542477220953,-2.218896784118801,-2.142368796028072,-2.0658408079373434,-1.9893128198466146,-1.9127848317558858,-1.836256843665157,-1.7597288555744282,-1.6832008674836993,-1.6066728793929705,-1.5301448913022417,-1.453616903211513,-1.377088915120784,-1.300560927030055,-1.2240329389393263,-1.1475049508485975,-1.0709769627578687,-0.9944489746671399,-0.9179209865764109,-0.841392998485682,-0.7648650103949532,-0.6883370223042244,-0.6118090342134956,-0.5352810461227668,-0.45875305803203803,-0.3822250699413092,-0.3056970818505804,-0.22916909375985162,-0.1526411056691228,-0.07611311757839401,0.0004148705123347973,0.0769428586030636,0.15347084669379285,0.22999883478452166,0.30652682287525046,0.38305481096597926,0.45958279905670807,0.5361107871474369,0.6126387752381657,0.6891667633288945,0.7656947514196233,0.8422227395103521,0.9187507276010809,0.9952787156918097,1.071806703782539,1.1483346918732678,1.2248626799639966,1.3013906680547254,1.3779186561454542,1.454446644236183,1.5309746323269118,1.6075026204176406,1.6840306085083694,1.7605585965990982,1.837086584689827,1.9136145727805558,1.9901425608712846,2.0666705489620134,2.143198537052742,2.219726525143471,2.2962545132342,2.3727825013249286,2.4493104894156574,2.5258384775063862,2.602366465597115,2.678894453687844,2.7554224417785727,2.8319504298693015,2.9084784179600303,2.985006406050759,3.061534394141488,3.1380623822322167,3.2145903703229464,3.291118358413675,3.367646346504404,3.444174334595133,3.5207023226858616,3.5972303107765904,3.673758298867319,3.750286286958048,3.826814275048777,3.9033422631395056,3.9798702512302344,4.056398239320963,4.1329262274116925,4.20945421550242,4.28598220359315,4.362510191683878,4.439038179774608,4.515566167865336,4.592094155956065,4.668622144046793,4.745150132137523,4.821678120228251,4.8982061083189805,4.974734096409708,5.051262084500438,5.127790072591168,5.204318060681896,5.280846048772625,5.357374036863353,5.433902024954083,5.510430013044811,5.586958001135541,5.663485989226269,5.740013977316998,5.816541965407726,5.893069953498456,5.969597941589184,6.0461259296799135,6.1226539177706405],"density":[0.005058805695315173,0.006173625147848546,0.007413137790452933,0.008770559817161088,0.010238529712976148,0.011810182608249863,0.01347961019255618,0.01524140929904498,0.017089214212528642,0.019013369173339414,0.020998170485484583,0.02301932081933996,0.025042325296959142,0.027022477538737655,0.02890683101349222,0.030638168643909513,0.03216055205931257,0.03342565207408601,0.03439882977602428,0.03506391743208158,0.035425853659402574,0.03551071422082333,0.03536315762397421,0.03504176001854039,0.034613042386663996,0.0341451288698805,0.03370190835942888,0.03333834782914807,0.03309730835567048,0.03300793423606786,0.03308549033289614,0.03333243793864425,0.033740544049404755,0.03429386067554262,0.03497243281083669,0.03575656201586464,0.03663137325501993,0.03759135047486846,0.03864448548234653,0.039815777401051085,0.0411500371002306,0.04271424492994809,0.04459997988139337,0.04692655649869553,0.049845360024121085,0.05354540572092507,0.058259398903483944,0.06426866868070706,0.07190450167256417,0.08154286438046515,0.09358951601932601,0.10845325157304721,0.12650653250459282,0.14803495679302825,0.1731796124762251,0.20187891031706992,0.23381845520536787,0.2683983354517856,0.3047264458724711,0.3416439315058618,0.3777847216658797,0.4116659895816667,0.4418011153578747,0.46682239488519156,0.48559828063998783,0.49732998290490005,0.5016149106305563,0.4984692368867577,0.48830791789429545,0.47188661688118394,0.4502150586617356,0.4244545304898928,0.39581316173821324,0.3654513549296712,0.334406795603684,0.30354456154791826,0.2735337513681933,0.2448484167118225,0.21778786665704752,0.1925098399804536,0.16906962440769313,0.14745879325304959,0.12763857413734106,0.10956465045371656,0.09320210005848786,0.07853090053673531,0.0655437434195245,0.05423866245046976,0.0446091669323059,0.03663426325781814,0.03027011280927294,0.025444319019388175,0.022053154322063277,0.01996156369175823,0.019005563635846722,0.0189966542361467,0.019727974088822427,0.020982028982275986,0.022539814022360126,0.024190984151224143,0.025744441776169337,0.027038397386324523,0.02794874450870519,0.028394585375035912,0.028340005132988535,0.027791698839358815,0.026792707822143554,0.02541317000252478,0.023739474291861348,0.021863413034357744,0.019872803409097056,0.01784463948546358,0.015841253729375462,0.013909359305973588,0.012081354457607362,0.0103779940706392,0.008811501120600232,0.007388365747432986,0.006111379567512891,0.0049807784874850046],"p2_5":-1.5411089026379896,"p97_5":4.88162649642636,"mean":1.9313486638399016},"med_money":{"grid":[-2.160905252415938,-2.1463093632307806,-2.131713474045623,-2.1171175848604658,-2.1025216956753083,-2.0879258064901505,-2.073329917304993,-2.0587340281198356,-2.044138138934678,-2.029542249749521,-2.0149463605643634,-2.000350471379206,-1.9857545821940483,-1.971158693008891,-1.9565628038237335,-1.9419669146385758,-1.9273710254534184,-1.912775136268261,-1.8981792470831036,-1.8835833578979462,-1.8689874687127885,-1.8543915795276311,-1.8397956903424737,-1.825199801157316,-1.8106039119721586,-1.7960080227870012,-1.7814121336018438,-1.7668162444166864,-1.752220355231529,-1.7376244660463713,-1.723028576861214,-1.7084326876760565,-1.6938367984908989,-1.6792409093057414,-1.664645020120584,-1.6500491309354266,-1.6354532417502692,-1.6208573525651118,-1.6062614633799541,-1.5916655741947967,-1.577069685009639,-1.5624737958244816,-1.5478779066393242,-1.5332820174541668,-1.5186861282690094,-1.504090239083852,-1.4894943498986943,-1.474898460713537,-1.4603025715283795,-1.4457066823432219,-1.4311107931580644,-1.416514903972907,-1.4019190147877496,-1.3873231256025922,-1.3727272364174348,-1.3581313472322771,-1.3435354580471197,-1.328939568861962,-1.3143436796768047,-1.2997477904916472,-1.2851519013064898,-1.2705560121213324,-1.255960122936175,-1.2413642337510173,-1.22676834456586,-1.2121724553807025,-1.1975765661955449,-1.1829806770103874,-1.16838478782523,-1.1537888986400726,-1.1391930094549152,-1.1245971202697576,-1.1100012310846001,-1.0954053418994427,-1.0808094527142853,-1.0662135635291277,-1.0516176743439702,-1.0370217851588128,-1.0224258959736554,-1.0078300067884978,-0.9932341176033403,-0.9786382284181829,-0.9640423392330255,-0.9494464500478681,-0.9348505608627105,-0.920254671677553,-0.9056587824923956,-0.8910628933072382,-0.8764670041220806,-0.8618711149369231,-0.8472752257517657,-0.8326793365666083,-0.8180834473814507,-0.8034875581962933,-0.7888916690111358,-0.7742957798259784,-0.759699890640821,-0.7451040014556634,-0.7305081122705059,-0.7159122230853485,-0.7013163339001911,-0.6867204447150335,-0.672124555529876,-0.6575286663447186,-0.6429327771595612,-0.6283368879744036,-0.6137409987892462,-0.5991451096040887,-0.5845492204189313,-0.5699533312337737,-0.5553574420486163,-0.5407615528634588,-0.5261656636783014,-0.511569774493144,-0.49697388530798636,-0.48237799612282894,-0.4677821069376715,-0.4531862177525141,-0.43859032856735647,-0.42399443938219894],"density":[2.1416298051910477e-36,2.1073601283844287e-34,1.810991078281649e-32,1.359218954569026e-30,8.90986728249314e-29,5.1012392470311736e-27,2.551041702471005e-25,1.1143264328845682e-23,4.251838503272021e-22,1.4171892022050818e-20,4.126518441377193e-19,1.049696115032905e-17,2.332850987079846e-16,4.529753283322324e-15,7.685063979438698e-14,1.1392727710105748e-12,1.4758346997196257e-11,1.6707075933580736e-10,1.6528720676895632e-09,1.4291495824469579e-08,1.080039137981234e-07,7.134250540225737e-07,4.119341962082575e-06,2.079224344301102e-05,9.174706764160972e-05,0.00035393548014411283,0.0011937752406777592,0.003520611964521067,0.009079340531969226,0.020478832719894473,0.040412595603577135,0.0698231912340243,0.1057889677655768,0.1410493400099018,0.16679501866231564,0.1778776184679838,0.17675597525554787,0.17256748184363396,0.17558572365265152,0.19161713000650937,0.22113285897834148,0.26356680432821833,0.3225245755402446,0.40738769370710337,0.5309978084218001,0.7069393442100841,0.9493661952863041,1.2748794228103244,1.7038577493357385,2.258182152525968,2.9510226800034283,3.7651458188058995,4.626160888415419,5.392674440956844,5.886872973826983,5.963450728006624,5.5799093428829805,4.822446934957996,3.870571839622471,2.923755529818465,2.1315942347644463,1.5581483942831538,1.1876270694575752,0.9588427116659323,0.8063788972845393,0.6881239746420684,0.5900395221752751,0.5135854855558799,0.45986794628277955,0.422058053237217,0.3879298726967029,0.3467723402707045,0.2945408383112706,0.23502296543330528,0.17774813831467356,0.13397964519083413,0.11209359231762372,0.1139075622677282,0.1335393594576016,0.1596360226038021,0.1802721544289892,0.1879949449972897,0.1819112888218772,0.1657021916385221,0.1437447474105494,0.11877049259578763,0.09231351498743752,0.06622603146607085,0.04305682211285228,0.025015516179434587,0.012866171061712523,0.005824149683489955,0.002312379437208161,0.0008036371954216445,0.00024419559346377915,6.483495007313256e-05,1.503533305950585e-05,3.0447936161879966e-06,5.383831525363706e-07,8.311590064126952e-08,1.1202599937184522e-08,1.3182138327226867e-09,1.3541901351817215e-10,1.2144984427263073e-11,9.509024524937475e-13,6.499734200681571e-14,3.8786021731382535e-15,2.0205729317509695e-16,9.189529462720559e-18,3.648642804417626e-19,1.2647033959088457e-20,3.827059745999334e-22,1.0110229130917841e-23,2.331717537667428e-25,4.6947239120559124e-27,8.252078449682849e-29,1.2662976726152412e-30,1.69639677335662e-32,1.983984314732392e-34,2.025667675468359e-36],"p2_5":-1.5543232336151958,"p97_5":-1.1066506569663486,"mean":-1.3530104203220956},"low_money":{"grid":[-4.518155569037472,-4.487569301541413,-4.4569830340453525,-4.426396766549293,-4.3958104990532325,-4.365224231557173,-4.334637964061113,-4.304051696565053,-4.273465429068993,-4.242879161572933,-4.212292894076874,-4.181706626580813,-4.151120359084754,-4.120534091588693,-4.089947824092634,-4.059361556596573,-4.028775289100514,-3.9981890216044538,-3.967602754108394,-3.937016486612334,-3.906430219116274,-3.8758439516202143,-3.845257684124154,-3.8146714166280944,-3.7840851491320344,-3.7534988816359744,-3.7229126141399145,-3.6923263466438545,-3.6617400791477945,-3.6311538116517346,-3.600567544155675,-3.569981276659615,-3.539395009163555,-3.508808741667495,-3.478222474171435,-3.447636206675375,-3.417049939179315,-3.3864636716832557,-3.3558774041871953,-3.3252911366911357,-3.2947048691950753,-3.264118601699016,-3.233532334202956,-3.202946066706896,-3.172359799210836,-3.141773531714776,-3.1111872642187164,-3.080600996722656,-3.0500147292265964,-3.019428461730536,-2.9888421942344765,-2.9582559267384165,-2.9276696592423566,-2.8970833917462966,-2.8664971242502366,-2.835910856754177,-2.8053245892581167,-2.774738321762057,-2.744152054265997,-2.713565786769937,-2.6829795192738772,-2.6523932517778173,-2.6218069842817577,-2.5912207167856973,-2.560634449289638,-2.5300481817935774,-2.499461914297518,-2.468875646801458,-2.438289379305398,-2.407703111809338,-2.377116844313278,-2.346530576817218,-2.315944309321158,-2.2853580418250985,-2.2547717743290385,-2.2241855068329786,-2.1935992393369186,-2.1630129718408586,-2.1324267043447986,-2.1018404368487387,-2.0712541693526787,-2.0406679018566187,-2.010081634360559,-1.9794953668644992,-1.9489090993684393,-1.9183228318723793,-1.8877365643763193,-1.8571502968802593,-1.8265640293841994,-1.7959777618881394,-1.7653914943920799,-1.73480522689602,-1.70421895939996,-1.6736326919039,-1.64304642440784,-1.61246015691178,-1.58187388941572,-1.55128762191966,-1.5207013544236,-1.4901150869275406,-1.4595288194314806,-1.4289425519354206,-1.3983562844393607,-1.3677700169433007,-1.3371837494472407,-1.3065974819511808,-1.2760112144551208,-1.2454249469590613,-1.2148386794630013,-1.1842524119669413,-1.1536661444708813,-1.1230798769748214,-1.0924936094787614,-1.0619073419827014,-1.0313210744866415,-1.0007348069905815,-0.970148539494522,-0.939562271998462,-0.908976004502402,-0.878389737006342],"density":[1.1200431072441465e-05,2.8024382667654774e-05,6.618318665427748e-05,0.00014753286099588922,0.0003104473001681808,0.0006167193856713363,0.0011567814148212166,0.002049148407226891,0.003429212941821792,0.0054240456347671205,0.00811465465486574,0.011494580077900666,0.015440714028401675,0.01971414900707037,0.0240018750739007,0.02799470656143839,0.03147917908319151,0.0344111066533751,0.0369434795128854,0.03940066640182282,0.04221440932085245,0.04585123005036809,0.050757714788629574,0.05733362745704329,0.0659262003052397,0.07683501096788789,0.09032781259022266,0.10668311644980177,0.12627979283308768,0.1497385353902135,0.17808900306571848,0.21290474539334064,0.2563325709456399,0.31095469826082484,0.37946191863361584,0.464174896303878,0.566509679629582,0.6865169761696075,0.8226103797018199,0.9715326705525851,1.1285173980621803,1.287534790899374,1.4415133552880381,1.5825115585088785,1.7019348983124587,1.7909736274214287,1.8414064080159307,1.8467634058932711,1.8036315089238244,1.7127236666471763,1.5793196044400304,1.4128424716309005,1.2256040811763633,1.0310140588655738,0.8416963831242361,0.6679423284994941,0.5167798387708344,0.3917339579832894,0.2931735758687286,0.21903688350754794,0.16570924436491244,0.12886908640521993,0.10418536517346133,0.08781512563468646,0.07669607661344745,0.06865488674378607,0.06236414012490728,0.057188639879218205,0.05296960393597855,0.04980047347611708,0.0478432821698333,0.047215220912908314,0.0479455476118778,0.049976566110434606,0.053173329567013095,0.05731981655863709,0.06210482662533301,0.06711999652302063,0.07189071041861968,0.07593939300198109,0.07885630490352435,0.0803451440019549,0.08022676313693859,0.07841288101767624,0.07488139857640648,0.06968082097339419,0.06296619004805157,0.05504118948884297,0.04637055187193673,0.03754065856380137,0.02917453841458373,0.021831814141580603,0.015930206053648456,0.011711307312735744,0.009249622452700543,0.008484526684806037,0.009249654932353642,0.01128423864865579,0.0142290700288847,0.017625451466415063,0.02093973416088046,0.023625852363544298,0.025218221380307302,0.025427824083804944,0.024206187845444083,0.021750664850142147,0.018446413317568456,0.014764915643955033,0.011153840487825462,0.007952255358255007,0.005350912745332023,0.0033981049739391614,0.002036652664467597,0.0011520421318808435,0.0006150224253298001,0.00030987370978202434,0.00014734985047654313,6.612807104766934e-05,2.80087157638893e-05,1.1196227762737474e-05],"p2_5":-3.5916582225111835,"p97_5":-2.088519808572698,"mean":-3.0727112286351788}},"example":{"id":2,"rows":[{"choice_set":1,"card":6,"alt_label":"Option A","development":"Residential","water":"Low","cultural":"None","chosen":0,"res_money":1,"low_money":1,"med_money":0},{"choice_set":1,"card":6,"alt_label":"Option B","development":"Limited","water":"High","cultural":"Stables & landscape","chosen":1,"res_money":0,"low_money":0,"med_money":0},{"choice_set":1,"card":6,"alt_label":"Status quo","development":"None","water":"High","cultural":"None","chosen":0,"res_money":0,"low_money":0,"med_money":0},{"choice_set":2,"card":7,"alt_label":"Option A","development":"Commercial","water":"High","cultural":"Stables & landscape","chosen":1,"res_money":0,"low_money":0,"med_money":0},{"choice_set":2,"card":7,"alt_label":"Option B","development":"Residential","water":"Medium","cultural":"Stables & landscape","chosen":0,"res_money":1,"low_money":0,"med_money":1},{"choice_set":2,"card":7,"alt_label":"Status quo","development":"None","water":"High","cultural":"None","chosen":0,"res_money":0,"low_money":0,"med_money":0},{"choice_set":3,"card":8,"alt_label":"Option A","development":"Limited","water":"Medium","cultural":"Stables","chosen":0,"res_money":0,"low_money":0,"med_money":1},{"choice_set":3,"card":8,"alt_label":"Option B","development":"Commercial","water":"High","cultural":"Stables","chosen":1,"res_money":0,"low_money":0,"med_money":0},{"choice_set":3,"card":8,"alt_label":"Status quo","development":"None","water":"High","cultural":"None","chosen":0,"res_money":0,"low_money":0,"med_money":0},{"choice_set":4,"card":12,"alt_label":"Option A","development":"Limited","water":"Medium","cultural":"Stables","chosen":1,"res_money":0,"low_money":0,"med_money":1},{"choice_set":4,"card":12,"alt_label":"Option B","development":"Residential","water":"Low","cultural":"Stables","chosen":0,"res_money":1,"low_money":1,"med_money":0},{"choice_set":4,"card":12,"alt_label":"Status quo","development":"None","water":"High","cultural":"None","chosen":0,"res_money":0,"low_money":0,"med_money":0}]},"table1":[{"variable":"Gender","category":"Female","paper":32.5,"ours_all_180":32.5,"ours_complete_164":31.9,"diff_all":0.0},{"variable":"Gender","category":"Male","paper":67.5,"ours_all_180":67.5,"ours_complete_164":68.1,"diff_all":-0.0},{"variable":"Age","category":"<40","paper":8.4,"ours_all_180":8.4,"ours_complete_164":8.0,"diff_all":-0.0},{"variable":"Age","category":"40\u201349","paper":14.8,"ours_all_180":14.8,"ours_complete_164":14.7,"diff_all":0.0},{"variable":"Age","category":"50\u201359","paper":27.7,"ours_all_180":27.7,"ours_complete_164":28.7,"diff_all":0.0},{"variable":"Age","category":"60\u201369","paper":36.8,"ours_all_180":36.8,"ours_complete_164":36.7,"diff_all":-0.0},{"variable":"Age","category":">70","paper":12.3,"ours_all_180":12.3,"ours_complete_164":12.0,"diff_all":-0.0},{"variable":"Personal residence","category":"Rural","paper":41.8,"ours_all_180":41.8,"ours_complete_164":41.5,"diff_all":-0.0},{"variable":"Personal residence","category":"Urban","paper":58.2,"ours_all_180":58.2,"ours_complete_164":58.5,"diff_all":0.0},{"variable":"City inhabitants","category":">50,000","paper":36.7,"ours_all_180":39.1,"ours_complete_164":40.4,"diff_all":2.4},{"variable":"City inhabitants","category":"15,001\u201350,000","paper":30.9,"ours_all_180":29.0,"ours_complete_164":28.2,"diff_all":-1.9},{"variable":"City inhabitants","category":"5,000\u201315,000","paper":21.3,"ours_all_180":20.1,"ours_complete_164":19.2,"diff_all":-1.2},{"variable":"City inhabitants","category":"<5,000","paper":11.2,"ours_all_180":11.8,"ours_complete_164":12.2,"diff_all":0.6}],"fig1":{"1":{"1":18,"2":17,"3":19},"2":{"1":19,"2":15,"3":20},"3":{"1":19,"2":20,"3":20},"4":{"1":22,"2":18,"3":16},"5":{"1":18,"2":17,"3":18},"6":{"1":17,"2":20,"3":18},"7":{"1":18,"2":18,"3":14},"8":{"1":21,"2":19,"3":22},"9":{"1":19,"2":15,"3":17},"10":{"1":21,"2":18,"3":18},"11":{"1":18,"2":17,"3":20},"12":{"1":18,"2":14,"3":18}},"rates":[{"attribute":"development","level":"Limited","treatment":1,"shown":151,"chosen":45,"rate":0.2980132450331126},{"attribute":"development","level":"Limited","treatment":2,"shown":140,"chosen":49,"rate":0.35},{"attribute":"development","level":"Limited","treatment":3,"shown":150,"chosen":40,"rate":0.26666666666666666},{"attribute":"development","level":"Residential","treatment":1,"shown":167,"chosen":52,"rate":0.31137724550898205},{"attribute":"development","level":"Residential","treatment":2,"shown":156,"chosen":53,"rate":0.33974358974358976},{"attribute":"development","level":"Residential","treatment":3,"shown":163,"chosen":60,"rate":0.36809815950920244},{"attribute":"development","level":"Commercial","treatment":1,"shown":138,"chosen":61,"rate":0.4420289855072464},{"attribute":"development","level":"Commercial","treatment":2,"shown":120,"chosen":64,"rate":0.5333333333333333},{"attribute":"development","level":"Commercial","treatment":3,"shown":127,"chosen":57,"rate":0.44881889763779526},{"attribute":"water","level":"High","treatment":1,"shown":152,"chosen":108,"rate":0.7105263157894737},{"attribute":"water","level":"High","treatment":2,"shown":139,"chosen":115,"rate":0.8273381294964028},{"attribute":"water","level":"High","treatment":3,"shown":146,"chosen":119,"rate":0.815068493150685},{"attribute":"water","level":"Medium","treatment":1,"shown":174,"chosen":41,"rate":0.23563218390804597},{"attribute":"water","level":"Medium","treatment":2,"shown":156,"chosen":42,"rate":0.2692307692307692},{"attribute":"water","level":"Medium","treatment":3,"shown":161,"chosen":33,"rate":0.20496894409937888},{"attribute":"water","level":"Low","treatment":1,"shown":130,"chosen":9,"rate":0.06923076923076923},{"attribute":"water","level":"Low","treatment":2,"shown":121,"chosen":9,"rate":0.0743801652892562},{"attribute":"water","level":"Low","treatment":3,"shown":133,"chosen":5,"rate":0.03759398496240601},{"attribute":"cultural","level":"None","treatment":1,"shown":115,"chosen":10,"rate":0.08695652173913043},{"attribute":"cultural","level":"None","treatment":2,"shown":105,"chosen":9,"rate":0.08571428571428572},{"attribute":"cultural","level":"None","treatment":3,"shown":111,"chosen":3,"rate":0.02702702702702703},{"attribute":"cultural","level":"Stables","treatment":1,"shown":155,"chosen":49,"rate":0.3161290322580645},{"attribute":"cultural","level":"Stables","treatment":2,"shown":136,"chosen":51,"rate":0.375},{"attribute":"cultural","level":"Stables","treatment":3,"shown":153,"chosen":46,"rate":0.3006535947712418},{"attribute":"cultural","level":"Stables & landscape","treatment":1,"shown":186,"chosen":99,"rate":0.532258064516129},{"attribute":"cultural","level":"Stables & landscape","treatment":2,"shown":175,"chosen":106,"rate":0.6057142857142858},{"attribute":"cultural","level":"Stables & landscape","treatment":3,"shown":176,"chosen":108,"rate":0.6136363636363636},{"attribute":"status quo","level":"Status quo","treatment":1,"shown":228,"chosen":70,"rate":0.30701754385964913},{"attribute":"status quo","level":"Status quo","treatment":2,"shown":208,"chosen":42,"rate":0.20192307692307693},{"attribute":"status quo","level":"Status quo","treatment":3,"shown":220,"chosen":63,"rate":0.2863636363636364}],"card_shares":[{"card":1,"treatment":1,"A":8,"B":3,"SQ":7},{"card":1,"treatment":2,"A":12,"B":2,"SQ":3},{"card":1,"treatment":3,"A":18,"B":1,"SQ":0},{"card":2,"treatment":1,"A":0,"B":17,"SQ":2},{"card":2,"treatment":2,"A":0,"B":15,"SQ":0},{"card":2,"treatment":3,"A":0,"B":17,"SQ":3},{"card":3,"treatment":1,"A":2,"B":11,"SQ":6},{"card":3,"treatment":2,"A":1,"B":12,"SQ":7},{"card":3,"treatment":3,"A":1,"B":9,"SQ":10},{"card":4,"treatment":1,"A":16,"B":4,"SQ":2},{"card":4,"treatment":2,"A":12,"B":4,"SQ":2},{"card":4,"treatment":3,"A":14,"B":1,"SQ":1},{"card":5,"treatment":1,"A":3,"B":6,"SQ":9},{"card":5,"treatment":2,"A":4,"B":6,"SQ":7},{"card":5,"treatment":3,"A":5,"B":6,"SQ":7},{"card":6,"treatment":1,"A":1,"B":12,"SQ":4},{"card":6,"treatment":2,"A":0,"B":17,"SQ":3},{"card":6,"treatment":3,"A":1,"B":14,"SQ":3},{"card":7,"treatment":1,"A":12,"B":1,"SQ":5},{"card":7,"treatment":2,"A":15,"B":2,"SQ":1},{"card":7,"treatment":3,"A":8,"B":1,"SQ":5},{"card":8,"treatment":1,"A":0,"B":18,"SQ":3},{"card":8,"treatment":2,"A":0,"B":18,"SQ":1},{"card":8,"treatment":3,"A":0,"B":19,"SQ":3},{"card":9,"treatment":1,"A":13,"B":1,"SQ":5},{"card":9,"treatment":2,"A":12,"B":2,"SQ":1},{"card":9,"treatment":3,"A":14,"B":1,"SQ":2},{"card":10,"treatment":1,"A":2,"B":8,"SQ":11},{"card":10,"treatment":2,"A":1,"B":9,"SQ":8},{"card":10,"treatment":3,"A":0,"B":5,"SQ":13},{"card":11,"treatment":1,"A":0,"B":12,"SQ":6},{"card":11,"treatment":2,"A":2,"B":14,"SQ":1},{"card":11,"treatment":3,"A":0,"B":15,"SQ":5},{"card":12,"treatment":1,"A":7,"B":1,"SQ":10},{"card":12,"treatment":2,"A":3,"B":3,"SQ":8},{"card":12,"treatment":3,"A":5,"B":2,"SQ":11}],"cards":[{"card":1,"a_development":"Residential","b_development":"Limited","a_water":"High","b_water":"Low","a_cultural":"Stables & landscape","b_cultural":"None"},{"card":2,"a_development":"Commercial","b_development":"Residential","a_water":"Low","b_water":"High","a_cultural":"None","b_cultural":"Stables & landscape"},{"card":3,"a_development":"Residential","b_development":"Limited","a_water":"Low","b_water":"Medium","a_cultural":"Stables & landscape","b_cultural":"Stables"},{"card":4,"a_development":"Residential","b_development":"Commercial","a_water":"High","b_water":"Medium","a_cultural":"Stables & landscape","b_cultural":"None"},{"card":5,"a_development":"Limited","b_development":"Residential","a_water":"Medium","b_water":"Medium","a_cultural":"Stables","b_cultural":"Stables & landscape"},{"card":6,"a_development":"Residential","b_development":"Limited","a_water":"Low","b_water":"High","a_cultural":"None","b_cultural":"Stables & landscape"},{"card":7,"a_development":"Commercial","b_development":"Residential","a_water":"High","b_water":"Medium","a_cultural":"Stables & landscape","b_cultural":"Stables & landscape"},{"card":8,"a_development":"Limited","b_development":"Commercial","a_water":"Medium","b_water":"High","a_cultural":"Stables","b_cultural":"Stables"},{"card":9,"a_development":"Commercial","b_development":"Limited","a_water":"High","b_water":"Medium","a_cultural":"Stables & landscape","b_cultural":"Stables"},{"card":10,"a_development":"Commercial","b_development":"Limited","a_water":"Low","b_water":"Medium","a_cultural":"None","b_cultural":"Stables"},{"card":11,"a_development":"Residential","b_development":"Commercial","a_water":"Low","b_water":"High","a_cultural":"None","b_cultural":"Stables & landscape"},{"card":12,"a_development":"Limited","b_development":"Residential","a_water":"Medium","b_water":"Low","a_cultural":"Stables","b_cultural":"Stables"}],"flow":{"raw_rows":2160,"raw_respondents":180,"finished_flag":171,"incomplete_respondents":16,"complete_respondents":164,"complete_rows":1968,"choice_occasions":656,"councillor_respondents":123,"councillor_rows":1476,"councillor_by_code":121,"respondents_by_treatment":{"1":57,"2":52,"3":55},"status_quo_share":0.26676829268292684},"sq_by_person":{"0":78,"1":39,"2":18,"3":16,"4":13}};
+const $ = (s, r = document) => r.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+const minus = s => s.replace(/-/g, "−");
+const f = (v, d = 3) => minus((+v).toFixed(d));
+const pct = (v, d = 0) => (v * 100).toFixed(d) + "%";
+const pf = p => p < 0.001 ? "<0.001" : (+p).toFixed(3);
+const stars = p => p < 0.01 ? "***" : p < 0.05 ? "**" : p < 0.1 ? "*" : "";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function el(tag, attrs = {}, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+function txt(parent, x, y, s, cls, anchor = "start") { const t = el("text", {x, y, class: cls || "", "text-anchor": anchor}, parent); t.textContent = s; return t; }
+function ticks(a, b, n) { const st0 = (b - a) / n, mag = 10 ** Math.floor(Math.log10(st0)), e = st0 / mag;
+  const st = (e >= 7.5 ? 10 : e >= 3.5 ? 5 : e >= 1.5 ? 2 : 1) * mag, out = [];
+  for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toFixed(10)); return out; }
+function seg(host, opts, get, set) {
+  host.replaceChildren(...opts.map(([val, label]) => { const b = document.createElement("button"); b.type = "button"; b.textContent = label;
+    b.setAttribute("aria-pressed", String(get() === val)); b.onclick = () => { set(val); [...host.children].forEach((c, i) => c.setAttribute("aria-pressed", String(opts[i][0] === get()))); }; return b; }));
+}
+function mount(host, draw) { let w = -1; host._draw = draw; new ResizeObserver(() => { const nw = host.clientWidth; if (Math.abs(nw - w) > 2) { w = nw; draw(); } }).observe(host); }
+
+// tooltip
+const tip = $("#tip");
+function showTip(e, html) { tip.innerHTML = html; tip.hidden = false; const r = tip.getBoundingClientRect();
+  let x = e.clientX + 14, y = e.clientY + 14; if (x + r.width > innerWidth - 8) x = e.clientX - r.width - 14; if (y + r.height > innerHeight - 8) y = e.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + "px"; tip.style.top = Math.max(8, y) + "px"; }
+const hideTip = () => { tip.hidden = true; };
+addEventListener("scroll", hideTip, {passive: true});
+
+const V = DATA.vars, P = DATA.paper, TKEYS = [1, 2, 3];
+const TNAME = {1: "No $ figures", 2: "$ for development", 3: "$ for development + water"};
+const TSHORT = {1: "T1", 2: "T2", 3: "T3"};
+const DEV = ["None", "Limited", "Residential", "Commercial"], WAT = ["High", "Medium", "Low"], CUL = ["None", "Stables", "Stables & landscape"];
+const DESC = {
+  dev: {None: "No land rezoned; growth goes elsewhere in the district. No increase in revenues or costs", Limited: "Half of the growth housed; low-density housing",
+        Residential: "All of the growth housed; medium-density housing", Commercial: "All growth housed, plus shops and a ‘super store’"},
+  wat: {High: "Clear water; game fish and native birds; safe to swim", Medium: "Slightly murky; no game fish; not safe to swim",
+        Low: "Very murky; few birds; unsafe for boating, fishing or swimming"},
+  cul: {None: "The Stables tavern stays a solitary landmark; views unaffected", Stables: "New buildings surround the historic Stables tavern",
+        "Stables & landscape": "Tavern surrounded and development visible across the landscape"}};
+const REV = {None: null, Limited: "+$1,000,000 district revenue", Residential: "+$2,000,000 district revenue", Commercial: "+$3,000,000 district revenue"};
+const WLOSS = {High: "No loss in well-being", Medium: "Well-being loss valued at $250,000", Low: "Well-being loss valued at $500,000"};
+const GROUPS = {dev_limited: "Development", dev_high: "Development", dev_com: "Development", wat_med: "Water quality", wat_low: "Water quality",
+  cult_s: "Cultural heritage", cult_sl: "Cultural heritage"};
+const SHORT = {dev_limited: "Limited", dev_high: "Residential", dev_com: "Commercial", wat_med: "Medium", wat_low: "Low", cult_s: "Stables",
+  cult_sl: "Stables & landscape", lim_money: "Limited dev.", res_money: "Residential dev.", com_money: "Commercial dev.",
+  med_money: "Medium water", low_money: "Low water"};
+const grpOf = k => GROUPS[k] || "Extra pull when $ shown";
+const FL = DATA.flow;
+
+/* ---------------- status strip ---------------- */
+function clMatches() { let yes = 0, n = 0; for (const m of ["m1", "m2"]) V.forEach((v, i) => { n++;
+  const r = DATA.cl[m].paper_spec; if (Math.abs(r.coef[i] - P[m].coef[i]) < 0.0015 && Math.abs(r.p[i] - P[m].p[i]) < 0.0015) yes++; }); return [yes, n]; }
+function mlInside() { let yes = 0, n = 0; for (const m of ["m3", "m4"]) V.forEach((v, i) => { n++; const xs = DATA.ml[m].runs.map(r => r.coef[i]);
+  if (P[m].coef[i] >= Math.min(...xs) && P[m].coef[i] <= Math.max(...xs)) yes++; }); return [yes, n]; }
+(function status() {
+  const [cy, cn] = clMatches(), [my, mn] = mlInside();
+  const t1exact = DATA.table1.filter(r => Math.abs(r.diff_all) <= 0.05).length;
+  const items = [
+    ["Sample size", "good", "Exact", `N = 1,968 (all) and 1,476 (councillors), as published`],
+    ["Table 1 (who answered)", "info", `${t1exact} of ${DATA.table1.length} exact`, "Gender, age and residence match; town size came from a larger dataset (n = 188)"],
+    ["Models 1–2 (conditional logit)", "good", `${cy} of ${cn} exact`, "Coefficient and p-value to 3 decimals; the other 4 are reporting errors in the paper"],
+    ["Models 3–4 (mixed logit)", "info", `${my} of ${mn} in range`, "Same signs; values move with the random draws"],
+    ["Main caveat", "warn", "Grouping", "Conditional logit pools each card across people"]];
+  $("#status").innerHTML = items.map(([k, c, chip, v]) => `<div class="stat"><div class="k">${k}</div><div><span class="chip ${c}">${chip}</span></div><div class="v">${v}</div></div>`).join("");
+})();
+
+/* ---------------- treatments ---------------- */
+(function treats() {
+  const n = FL.respondents_by_treatment;
+  const txt = {1: "Plans described in words only. The baseline group.",
+    2: "The same words, plus the added district revenue of each development level: $1M, $2M or $3M.",
+    3: "Revenue as in T2, plus the well-being losses from lower water quality: $250k (medium) or $500k (low)."};
+  $("#treats").innerHTML = TKEYS.map(t => `<div class="treat"><div class="tag"><span class="dot" style="background:var(--t${t})"></span>${TSHORT[t]} · ${TNAME[t]}</div>
+    <p>${txt[t]}</p><div class="n">${n[t]} respondents in the analysis sample · cultural impacts never priced</div></div>`).join("");
+  $("#tLegend").innerHTML = TKEYS.map(t => `<span><i style="background:var(--t${t})"></i>${TSHORT[t]} · ${TNAME[t]}</span>`).join("");
+})();
+
+/* ---------------- survey card explorer ---------------- */
+const coefC = key => Object.fromEntries(V.map((v, i) => [v.key, DATA.cl[key].corrected.coef[i]]));
+function util(o, t, b) {
+  const md = t >= 2 ? 1 : 0, mw = t === 3 ? 1 : 0, parts = [];
+  const add = (k, lab) => parts.push([lab, b[k]]);
+  if (o.dev === "Limited") { add("dev_limited", "Limited"); if (md) add("lim_money", "Limited × $"); }
+  if (o.dev === "Residential") { add("dev_high", "Residential"); if (md) add("res_money", "Residential × $"); }
+  if (o.dev === "Commercial") { add("dev_com", "Commercial"); if (md) add("com_money", "Commercial × $"); }
+  if (o.wat === "Medium") { add("wat_med", "Medium water"); if (mw) add("med_money", "Medium water × $"); }
+  if (o.wat === "Low") { add("wat_low", "Low water"); if (mw) add("low_money", "Low water × $"); }
+  if (o.cul === "Stables") add("cult_s", "Stables");
+  if (o.cul === "Stables & landscape") add("cult_sl", "Stables & landscape");
+  return {v: parts.reduce((s, p) => s + p[1], 0), parts};
+}
+function shares3(vs) { const m = Math.max(...vs), e = vs.map(v => Math.exp(v - m)), s = e.reduce((a, b) => a + b, 0); return e.map(x => x / s); }
+function barHTML(sh) { const cls = ["a", "b", "s"]; return `<div class="bar">${sh.map((p, i) => `<span class="${cls[i]}" style="flex:${Math.max(p, 0.0001)}">${p >= 0.1 ? pct(p) : ""}</span>`).join("")}</div>`; }
+const cardState = {card: 1, t: 1};
+function attrBlock(name, level, desc, money) { return `<div class="attr"><div class="an">${name}</div><div class="lv">${esc(level)}</div><div class="ds">${desc}</div>${money ? `<div class="money">${money}</div>` : ""}</div>`; }
+function drawCard() {
+  const c = DATA.cards.find(r => r.card === cardState.card), t = cardState.t;
+  const opts = [{h: "Option A", dev: c.a_development, wat: c.a_water, cul: c.a_cultural}, {h: "Option B", dev: c.b_development, wat: c.b_water, cul: c.b_cultural},
+    {h: "Keep things as they are", dev: "None", wat: "High", cul: "None"}];
+  $("#surveyCard").innerHTML = `<div class="ch"><span>Card ${c.card} of 12 · as shown to <b>${TSHORT[t]}</b> (${TNAME[t]})</span><span>Which would you choose?</span></div>
+    <div class="cols">${opts.map(o => `<div class="opt"><h4>${o.h}</h4>
+      ${attrBlock("Development", o.dev, DESC.dev[o.dev], t >= 2 ? REV[o.dev] : null)}
+      ${attrBlock("Water quality", o.wat, DESC.wat[o.wat], t === 3 ? WLOSS[o.wat] : null)}
+      ${attrBlock("Cultural heritage", o.cul, DESC.cul[o.cul], null)}</div>`).join("")}</div>`;
+  const rows = TKEYS.map(tt => { const r = DATA.card_shares.find(x => x.card === c.card && x.treatment === tt) || {A: 0, B: 0, SQ: 0};
+    const n = r.A + r.B + r.SQ; const sh = n ? [r.A / n, r.B / n, r.SQ / n] : [0, 0, 0];
+    return `<div class="srow ${tt === t ? "sel" : ""}"><div class="l"><span class="dot" style="background:var(--t${tt})"></span>${TSHORT[tt]} observed</div>${barHTML(sh)}<div class="num small muted">n=${n}</div></div>`; });
+  const b = coefC("m1"), pr = shares3([util(opts[0], t, b).v, util(opts[1], t, b).v, 0]);
+  rows.push(`<div class="srow pred"><div class="l">${TSHORT[t]} predicted</div>${barHTML(pr)}<div class="num small muted">model</div></div>`);
+  $("#cardShares").innerHTML = rows.join("");
+}
+(function initCard() {
+  $("#cardSel").innerHTML = DATA.cards.map(c => `<option value="${c.card}">Card ${c.card}</option>`).join("");
+  $("#cardSel").onchange = e => { cardState.card = +e.target.value; drawCard(); };
+  seg($("#cardTreat"), TKEYS.map(t => [t, TSHORT[t] + " · " + TNAME[t]]), () => cardState.t, v => { cardState.t = v; drawCard(); });
+  drawCard();
+})();
+
+/* ---------------- data section ---------------- */
+(function dataSection() {
+  const steps = [
+    ["Read the raw file", `${FL.raw_rows.toLocaleString()} rows × 147 columns. It is already in “long” form: one row per option shown to a person.`],
+    ["Confirm the structure", `${FL.raw_respondents} people × 4 cards × 3 options = 12 rows each. Exactly one option is marked “chosen” per card, and the status quo is always no development, high water quality, and no cultural impact.`],
+    ["Find the paper's sample", `The paper reports N = 1,968, which is 164 people × 12 rows. ${FL.incomplete_respondents} people answered fewer than 4 cards, and the file fills their blanks with copies of cards they did answer. Dropping them leaves exactly ${FL.complete_respondents}.`],
+    ["Find the councillors", `Role code “Councillor” gives ${FL.councillor_by_code}. Two more wrote “Mayor” and “Councillor but also Resource Consent Hearing Commissioner” under “Other”. Together they make ${FL.councillor_respondents}, matching N = 1,476 and the “75% councillors” in the text.`],
+    ["Build the model variables", "Dummy variables for each attribute level, plus “$ shown” interactions: development × (T2 or T3) and water quality × T3. One trap: the file's own <span class=\"mono\">water_high3</span> means <i>high</i> water in T3, not low, so we built that term ourselves."],
+    ["Estimate and compare", "Conditional logit (models 1–2), then mixed logit (models 3–4). Every coefficient, p-value, log likelihood and N is compared with the published Table 3."]];
+  $("#steps").innerHTML = steps.map(([b, s]) => `<li><div><b>${b}</b><span>${s}</span></div></li>`).join("");
+  const rows = [["All respondents in the file", FL.raw_respondents, ""], ["Answered fewer than 4 cards (dropped)", FL.incomplete_respondents, "drop"],
+    ["Models 1 & 3: all respondents", FL.complete_respondents, ""], ["Models 2 & 4: councillors only", FL.councillor_respondents, ""]];
+  $("#flow").innerHTML = rows.map(([l, n, c]) => `<div class="frow ${c}"><div class="fl"><span>${l}</span><span class="num">${n}${c ? "" : ` · ${(n * 12).toLocaleString()} rows`}</span></div>
+    <div class="fb" style="width:${n / FL.raw_respondents * 100}%"></div></div>`).join("");
+  const ex = DATA.example.rows;
+  $("#exCap").textContent = `Respondent #${DATA.example.id} was in group T3 (saw both kinds of $ figures). Four cards × three options = 12 rows. “Chosen” marks their pick; the “× $” columns switch on only when that option has that level and the group saw its price.`;
+  const head = ["Card #", "Card", "Option", "Development", "Water", "Cultural", "Chosen", "Residential × $", "Medium water × $", "Low water × $"];
+  $("#exTable").innerHTML = `<thead><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${ex.map(r => `<tr class="${r.chosen ? "hl" : ""}">
+    <td class="num">${r.choice_set}</td><td class="num">${r.card}</td><td>${r.alt_label}</td><td>${r.development}</td><td>${r.water}</td><td>${esc(r.cultural)}</td>
+    <td>${r.chosen ? "<b>✓ chosen</b>" : ""}</td><td class="num r">${r.res_money}</td><td class="num r">${r.med_money}</td><td class="num r">${r.low_money}</td></tr>`).join("")}</tbody>`;
+})();
+
+/* ---------------- grouped bars ---------------- */
+function barPath(x, y, w, h, r) { if (h <= 0) return ""; r = Math.min(r, w / 2, h);
+  return `M${x},${y + h}V${y + r}Q${x},${y} ${x + r},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h}Z`; }
+function groupedBars(host, cats, getVal, getTip, opt = {}) {
+  const W = host.clientWidth || 500, H = opt.h || 230, pl = 40, pr = 6, pt = 10, pb = 30;
+  const vals = cats.flatMap((c, ci) => TKEYS.map(t => getVal(ci, t)));
+  const ymax = opt.ymax || Math.max(...vals) * 1.12, tk = ticks(0, ymax, 4);
+  const sy = v => pt + (1 - v / ymax) * (H - pt - pb);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, class: "chart", role: "img", "aria-label": opt.aria || ""});
+  tk.forEach(t => { el("line", {x1: pl, x2: W - pr, y1: sy(t), y2: sy(t), class: t === 0 ? "base" : "grid"}, svg); txt(svg, pl - 6, sy(t) + 4, Math.round(t * 100) + "%", "tick", "end"); });
+  const gw = (W - pl - pr) / cats.length, inner = gw * 0.68, bw = (inner - 4) / 3;
+  cats.forEach((c, ci) => {
+    const gx = pl + ci * gw + (gw - inner) / 2;
+    txt(svg, pl + ci * gw + gw / 2, H - 10, c, "xl", "middle");
+    TKEYS.forEach((t, k) => { const v = getVal(ci, t), x = gx + k * (bw + 2), y = sy(v);
+      el("path", {d: barPath(x, y, bw, sy(0) - y, 4), class: "t" + t}, svg);
+      if (opt.labels) txt(svg, x + bw / 2, y - 5, pct(v), "val", "middle");
+      const hit = el("rect", {x: x - 1, y: pt, width: bw + 2, height: H - pt - pb, class: "hit"}, svg);
+      hit.addEventListener("pointermove", e => showTip(e, getTip(ci, t))); hit.addEventListener("pointerleave", hideTip); });
+  });
+  host.replaceChildren(svg);
+}
+(function rawCharts() {
+  const R = DATA.rates, get = (attr, lev, t) => R.find(r => r.attribute === attr && r.level === lev && r.treatment === t);
+  const tipR = r => `<b>${TSHORT[r.treatment]} · ${TNAME[r.treatment]}</b><br>${esc(r.level)}: picked <span class="num">${r.chosen}</span> of <span class="num">${r.shown}</span> times<br><b class="num">${pct(r.rate, 1)}</b>`;
+  const mk = (id, attr, levels, o) => { const h = $(id); mount(h, () => groupedBars(h, levels, (ci, t) => get(attr, levels[ci], t).rate, (ci, t) => tipR(get(attr, levels[ci], t)), o)); };
+  mk("#chWater", "water", WAT, {aria: "Pick rate by water quality and group", ymax: 1});
+  mk("#chDev", "development", ["Limited", "Residential", "Commercial"], {aria: "Pick rate by development level and group", h: 210, ymax: 0.7});
+  mk("#chSQ", "status quo", ["Status quo"], {aria: "Status quo pick rate by group", labels: true, ymax: 0.4});
+  const piv = {}; R.forEach(r => { const k = r.attribute + "|" + r.level; (piv[k] = piv[k] || {a: r.attribute, l: r.level})[r.treatment] = r; });
+  $("#ratesTable").innerHTML = `<thead><tr><th>Attribute</th><th>Level</th>${TKEYS.map(t => `<th class="r">${TSHORT[t]}</th>`).join("")}</tr></thead><tbody>${Object.values(piv).map(p =>
+    `<tr><td>${p.a}</td><td>${esc(p.l)}</td>${TKEYS.map(t => `<td class="num r">${pct(p[t].rate, 1)} <span class="muted">(${p[t].chosen}/${p[t].shown})</span></td>`).join("")}</tr>`).join("")}</tbody>`;
+  const sq = t => get("status quo", "Status quo", t).rate, lw = t => get("water", "Low", t).rate;
+  $("#rawTake").innerHTML = `When revenue figures were shown (T2), people kept the status quo on <b>${pct(sq(2))}</b> of cards, against <b>${pct(sq(1))}</b> with no figures. When water losses were priced as well (T3), options with <b>low</b> water quality were picked <b>${pct(lw(3), 1)}</b> of the time, against ${pct(lw(1), 1)} (T1) and ${pct(lw(2), 1)} (T2). The regressions ask whether these gaps hold up once everything else on the card is accounted for.`;
+})();
+
+/* ---------------- dot plot ---------------- */
+function dotPlot(host, rows, opt = {}) {
+  const W = host.clientWidth || 700, narrow = W < 520, lw = narrow ? 132 : 190, rh = opt.lanes ? 42 : narrow ? 30 : 28, gh = 26, pt = 4, pb = 40, pr = 14;
+  const up = opt.lanes ? -8 : 0, dn = opt.lanes ? 8 : 0;   // lane offsets: CL markers above, ML markers below
+  let y = pt, last = null; const pos = [];
+  rows.forEach(r => { if (r.group && r.group !== last) { pos.push({g: r.group, y}); y += gh; last = r.group; } pos.push({r, y: y + rh / 2}); y += rh; });
+  const H = y + pb;
+  let vals = rows.flatMap(r => [r.paper, r.paper2, r.ours, r.ring, r.lo, r.hi, ...(r.runs || [])]).filter(v => v != null && isFinite(v));
+  let [mn, mx] = opt.domain || [Math.min(0, ...vals), Math.max(0, ...vals)];
+  if (!opt.domain) { const pd = (mx - mn) * 0.05; mn -= pd; mx += pd; }
+  const x0 = lw, x1 = W - pr, sx = v => x0 + (v - mn) / (mx - mn) * (x1 - x0);
+  const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, class: "chart", role: "img", "aria-label": opt.aria || ""});
+  if (opt.shadeBelow != null) el("rect", {x: x0, y: pt, width: Math.max(0, sx(opt.shadeBelow) - x0), height: H - pt - pb, class: "shade"}, svg);
+  ticks(mn, mx, narrow ? 4 : 7).forEach(t => { el("line", {x1: sx(t), x2: sx(t), y1: pt, y2: H - pb, class: t === 0 && !opt.noZero ? "zero" : "grid"}, svg);
+    txt(svg, sx(t), H - pb + 16, opt.tickFmt ? opt.tickFmt(t) : minus(String(t)), "tick", "middle"); });
+  if (opt.xTitle) txt(svg, narrow ? W / 2 : (x0 + x1) / 2, H - 6, narrow && opt.xShort ? opt.xShort : opt.xTitle, "xl", "middle");
+  if (opt.ref) { el("line", {x1: sx(opt.ref.x), x2: sx(opt.ref.x), y1: pt, y2: H - pb, class: "ref"}, svg); }
+  pos.forEach(p => {
+    if (p.g) { txt(svg, 0, p.y + 17, p.g, "grp"); el("line", {x1: 0, x2: W - pr, y1: p.y + gh - 1.5, y2: p.y + gh - 1.5, class: "hair"}, svg); return; }
+    const r = p.r, cy = p.y;
+    txt(svg, lw - 12, cy + 4, r.label, narrow ? "labn" : "", "end");
+    const dia = (v, yy, s, cls) => { const x = sx(v); el("path", {d: `M${x},${yy - s}L${x + s},${yy}L${x},${yy + s}L${x - s},${yy}Z`, class: cls}, svg); };
+    (r.runs || []).forEach((v, i) => el("circle", {cx: sx(v), cy: cy + dn + ((i * 7) % 11 - 5), r: 2.6, class: "run"}, svg));
+    if (r.lo != null) el("line", {x1: sx(r.lo), x2: sx(r.hi), y1: cy + dn, y2: cy + dn, class: "range"}, svg);
+    if (r.ring != null) el("circle", {cx: sx(r.ring), cy: cy + dn, r: 4.8, class: "mk-ring"}, svg);
+    if (r.paper2 != null) dia(r.paper2, cy + dn, 6.5, "mk-paper2");
+    if (r.ours != null) el("circle", {cx: sx(r.ours), cy: cy + up, r: 4.6, class: "mk-us"}, svg);
+    if (r.paper != null) dia(r.paper, cy + up, 8, "mk-paper");
+    const hit = el("rect", {x: 0, y: cy - rh / 2, width: W, height: rh, class: "hit"}, svg);
+    svg.insertBefore(hit, svg.firstChild.nextSibling);
+    hit.addEventListener("pointermove", e => showTip(e, r.tip)); hit.addEventListener("pointerleave", hideTip);
+  });
+  if (opt.ref) txt(svg, sx(opt.ref.x) - 6, pt + 12, opt.ref.label, "reflab", "end");
+  host.replaceChildren(svg);
+}
+
+/* ---------------- Table 3 ---------------- */
+const MODELS = [["m1", "(1) CL · All"], ["m2", "(2) CL · Councillors"], ["m3", "(3) ML · All"], ["m4", "(4) ML · Councillors"]];
+let model = "m1";
+function modelRows(m) {
+  const isML = m === "m3" || m === "m4";
+  return V.map((v, i) => {
+    const pc = P[m].coef[i], pp = P[m].p[i];
+    let ours, op, lo, hi, runs, status, tipx;
+    if (!isML) { const r = DATA.cl[m].paper_spec; ours = r.coef[i]; op = r.p[i];
+      const cm = Math.abs(ours - pc) < 0.0015, pm = Math.abs(op - pp) < 0.0015;
+      status = cm && pm ? ["good", "Exact"] : cm ? ["warn", "p differs"] : ["warn", "Differs"];
+      tipx = `Corrected grouping: <span class="num">${f(DATA.cl[m].corrected.coef[i])}${stars(DATA.cl[m].corrected.p_cl[i])}</span> (clustered p ${pf(DATA.cl[m].corrected.p_cl[i])})`;
+    } else { const r = DATA.ml[m].primary; ours = r.coef[i]; op = r.p[i]; runs = DATA.ml[m].runs.map(x => x.coef[i]);
+      lo = Math.min(...runs); hi = Math.max(...runs);
+      status = pc >= lo && pc <= hi ? ["info", "In range"] : ["warn", "Outside range"];
+      tipx = `20 runs with 500 draws: <span class="num">${f(lo, 2)} to ${f(hi, 2)}</span>`; }
+    return {key: v.key, group: grpOf(v.key), label: SHORT[v.key], paper: pc, ours, lo, hi, runs, status, pp, op,
+      tip: `<b>${esc(v.label)}</b><br>Paper: <span class="num">${f(pc)}${stars(pp)}</span> (p ${pf(pp)})<br>Ours: <span class="num">${f(ours)}${stars(op)}</span> (p ${pf(op)})<br>${tipx}`};
+  });
+}
+function drawModel() {
+  const m = model, isML = m === "m3" || m === "m4", rows = modelRows(m);
+  $("#mTitle").textContent = "Model " + P[m].name;
+  const ll = isML ? DATA.ml[m].primary.ll : DATA.cl[m].paper_spec.ll;
+  $("#mStats").innerHTML = `Log likelihood: paper <span class="num">${f(P[m].ll, 2)}</span> · ours <span class="num">${f(ll, 2)}</span> · N = <span class="num">${P[m].n.toLocaleString()}</span>`;
+  $("#mNote").textContent = isML
+    ? "Mixed logit: every respondent gets their own coefficients, and the model is fitted by simulation. The violet dot uses 2,000 draws. Faint dots are 20 re-runs at the paper's 500 draws with different random sequences; their spread is pure simulation noise."
+    : "Conditional logit fitted with the paper's apparent setup, which pools each design card across respondents. Hover a row to see the same coefficient under the corrected, per-person grouping.";
+  $("#mLegend").innerHTML = `<span><i class="dia"></i>Published</span><span><i class="circ"></i>${isML ? "Ours (2,000 draws)" : "Ours (replicated): a dot inside a diamond = exact match"}</span>` +
+    (isML ? `<span><i class="runs"></i>20 runs at 500 draws</span><span><i class="rng"></i>Range of those runs</span>` : "");
+  const h = $("#chCoef"); h._draw = () => dotPlot(h, rows, {aria: `Coefficients for model ${P[m].name}, paper vs ours`, xTitle: "Coefficient (pull toward the option vs. keeping things as they are)", xShort: "Coefficient vs. status quo"}); h._draw();
+  const head = isML ? ["Variable", "Paper", "Ours (2,000 draws)", "20 runs × 500 draws", "Status"] : ["Variable", "Paper", "Ours", "Status", "Corrected grouping (clustered p)"];
+  let lastG = null;
+  const body = rows.map((r, i) => { const g = r.group !== lastG ? `<tr class="gh"><td colspan="5">${r.group}</td></tr>` : ""; lastG = r.group;
+    const cells = isML
+      ? `<td class="num r">${f(r.paper)}${stars(r.pp)} <span class="muted">(${pf(r.pp)})</span></td><td class="num r">${f(r.ours)}${stars(r.op)} <span class="muted">(${pf(r.op)})</span></td><td class="num r">${f(r.lo, 2)} to ${f(r.hi, 2)}</td><td><span class="chip ${r.status[0]}">${r.status[1]}</span></td>`
+      : `<td class="num r">${f(r.paper)}${stars(r.pp)} <span class="muted">(${pf(r.pp)})</span></td><td class="num r">${f(r.ours)}${stars(r.op)} <span class="muted">(${pf(r.op)})</span></td><td><span class="chip ${r.status[0]}">${r.status[1]}</span></td><td class="num r">${f(DATA.cl[m].corrected.coef[i])}${stars(DATA.cl[m].corrected.p_cl[i])} <span class="muted">(${pf(DATA.cl[m].corrected.p_cl[i])})</span></td>`;
+    return g + `<tr><td>${esc(r.label)}</td>${cells}</tr>`; }).join("");
+  $("#coefTable").innerHTML = `<thead><tr>${head.map((x, i) => `<th class="${i && i < 3 ? "r" : ""}">${x}</th>`).join("")}</tr></thead><tbody>${body}</tbody>`;
+}
+seg($("#modelSeg"), MODELS, () => model, v => { model = v; drawModel(); });
+mount($("#chCoef"), () => drawModel());
+
+/* ---------------- Figure 2 densities ---------------- */
+(function dens() {
+  const keys = ["lim_money", "res_money", "com_money", "med_money", "low_money"], host = $("#dens");
+  host.innerHTML = keys.map(k => `<div><h4>${SHORT[k]} × $</h4><div data-k="${k}"></div></div>`).join("");
+  host.querySelectorAll("[data-k]").forEach(h => mount(h, () => {
+    const d = DATA.fig2[h.dataset.k], W = h.clientWidth || 180, H = 120, pb = 22, pt = 6;
+    const xmn = Math.min(d.grid[0], 0), xmx = Math.max(d.grid[d.grid.length - 1], 0), ymx = Math.max(...d.density) || 1;
+    const sx = v => 4 + (v - xmn) / (xmx - xmn) * (W - 8), sy = v => pt + (1 - v / ymx) * (H - pt - pb);
+    const svg = el("svg", {viewBox: `0 0 ${W} ${H}`, class: "chart", role: "img", "aria-label": `Distribution of respondent-level ${SHORT[h.dataset.k]} × $ effects`});
+    ticks(xmn, xmx, 3).forEach(t => { el("line", {x1: sx(t), x2: sx(t), y1: pt, y2: H - pb, class: t === 0 ? "zero" : "grid"}, svg); txt(svg, sx(t), H - 6, minus(String(t)), "tick", "middle"); });
+    const pts = d.grid.map((g, i) => `${sx(g).toFixed(1)},${sy(d.density[i]).toFixed(1)}`);
+    el("path", {d: `M${sx(d.grid[0])},${sy(0)}L${pts.join("L")}L${sx(d.grid[d.grid.length - 1])},${sy(0)}Z`, class: "area"}, svg);
+    el("path", {d: "M" + pts.join("L"), class: "line"}, svg);
+    [d.p2_5, d.p97_5].forEach(q => el("line", {x1: sx(q), x2: sx(q), y1: pt, y2: H - pb, class: "q"}, svg));
+    const hit = el("rect", {x: 0, y: 0, width: W, height: H - pb, class: "hit"}, svg);
+    hit.addEventListener("pointermove", e => showTip(e, `<b>${SHORT[h.dataset.k]} × $</b><br>Mean across councillors: <span class="num">${f(d.mean, 2)}</span><br>Middle 95%: <span class="num">${f(d.p2_5, 2)} to ${f(d.p97_5, 2)}</span>`));
+    hit.addEventListener("pointerleave", hideTip);
+    h.replaceChildren(svg);
+  }));
+})();
+
+/* ---------------- relative effects ---------------- */
+(function rel() {
+  const keys = ["lim_money", "res_money", "com_money", "med_money", "low_money"];
+  const base = {lim_money: "Limited development", res_money: "Residential development", com_money: "Commercial development", med_money: "Medium water quality", low_money: "Low water quality"};
+  $("#sLegend").innerHTML = `<span><b>Conditional logit (upper lane):</b></span><span><i class="dia"></i>Paper, model 1 (card-pooled, as published)</span><span><i class="circ"></i>Ours, corrected grouping</span>` +
+    `<span style="flex-basis:100%;height:0"></span><span><b>Mixed logit (lower lane):</b></span><span><i class="dia2"></i>Paper, model 3</span><span><i class="ring"></i>Ours, median of 20 runs</span><span><i class="rng"></i>Range of those runs</span>`;
+  const ml = DATA.ml.m3.relative, p1 = DATA.cl_relative.m1.paper, c = DATA.cl_relative.m1.corrected;
+  const rows = keys.map(k => ({group: ["med_money", "low_money"].includes(k) ? "Water quality: extra aversion" : "Development: extra pull", label: SHORT[k].replace(" dev.", ""),
+      paper: p1[k], ours: c[k], paper2: ml.paper[k], ring: ml.median[k], lo: ml.min[k], hi: ml.max[k],
+      tip: `<b>${base[k]}</b>: effect with $ shown, as a share of the effect without<br><b>Conditional logit</b><br>Paper, model 1 (card-pooled): <span class="num">${pct(p1[k])}</span><br>Ours, corrected grouping: <span class="num">${pct(c[k])}</span><br><b>Mixed logit</b><br>Paper, model 3: <span class="num">${pct(ml.paper[k])}</span><br>Ours: <span class="num">${pct(ml.median[k])}</span> (20 runs: ${pct(ml.min[k])} to ${pct(ml.max[k])})`}));
+  const h = $("#chRel"); mount(h, () => dotPlot(h, rows, {lanes: true, aria: "Treatment effect as a percent of the baseline effect, paper and ours, conditional and mixed logit", tickFmt: t => Math.round(t * 100) + "%", xTitle: "How much stronger the preference is when $ is shown", xShort: "Extra strength when $ shown"}));
+  const rng = o => { const v = keys.map(k => o[k] * 100); return `${Math.round(Math.min(...v))}–${Math.round(Math.max(...v))}%`; };
+  $("#relTake").innerHTML = `Compare like with like. <b>Mixed logit:</b> the paper's model 3 implies a price tag strengthens a preference by <b>${rng(ml.paper)}</b>, and our runs give ${rng(ml.median)} (medians). <b>Conditional logit:</b> the paper's card-pooled model 1 implies only ${rng(p1)}; the same model grouped correctly gives <b>${rng(c)}</b>. So model 1 understates the effect relative to the paper's own mixed logit, and every version agrees on the direction.`;
+})();
+
+/* ---------------- findings ---------------- */
+(function findings() {
+  const c1 = DATA.cl.m1, null1 = c1.null_ll_occasion;
+  const F = [
+    {sev: "warn", chip: "Specification", t: "The conditional logit treats each design card as a single choice",
+     p: `The only setup that reproduces models 1–2 pools everyone who answered the same card into one group, as if 50-odd people made one joint choice. A correct 3-option choice model can never score below <b class="num">${f(null1, 1)}</b>, the score of a model that gives every option a 1-in-3 chance. The paper reports <b class="num">−852.9</b>, which only makes sense under the pooled grouping. Grouping correctly (one person, one card) roughly halves the main coefficients. All signs survive, and the “$ shown” effects keep their direction with similar p-values.`, ll: true},
+    {sev: "info", chip: "Robustness", t: "The mixed logit results move with the random draws",
+     p: `The log likelihood barely changes across draw sequences, but the coefficients do. The likelihood is flat: 24 parameters estimated from ${FL.choice_occasions} choices. The paper's model 3 values sit inside our spread. For councillors (model 4), the headline “low water × $” effect is <b class="num">−8.65</b> (p = 0.015) in the paper but <b class="num">${f(DATA.ml.m4.primary.coef[11], 2)}</b> (p = ${pf(DATA.ml.m4.primary.p[11])}) with 2,000 draws.`},
+    {sev: "warn", chip: "Reporting errors", t: "Every unmatched number in Table 3 traces to a reporting error",
+     li: ["Model 2 water quality: published −0.393 and −0.602; the data give −3.891 and −6.184. The published values are exactly our standard errors (0.393, 0.602), printed in place of the coefficients.",
+          "Model 1 Residential × $: published 0.670 against 0.699 from the data. The printed p-value (0.018) is what 0.699 gives; 0.670 would give 0.023.",
+          "Model 1 Stables & landscape: p-value published as 0.031, but the data give 0.001 (confirmed in R). The same model on all 180 respondents gives exactly 0.031, so it is likely left over from an earlier run.",
+          "Model 4 Residential × $ is marked ** (p < 0.05) with a printed p-value of 0.062, which by the table's own legend earns only *.",
+          "None of these come from our code: 08_debug_discrepancies.py tests each explanation and writes the evidence to discrepancy_diagnosis.csv."]},
+    {sev: "info", chip: "Description", t: "Some methods are described differently from what the data show",
+     li: ["“In each Halton draw, 15 individuals are randomly dropped” most likely describes Stata's burn(15), which discards the first 15 Halton points. No people are dropped.",
+          "The design is described as “two blocks”, but each respondent received a random 4 of the 12 cards.",
+          "Figure 2 is described as model 4 (councillors), but its peaks sit at the model 3 (all respondents) coefficients from Table 3.",
+          `Table 1 describes all ${FL.raw_respondents} respondents, including the ${FL.incomplete_respondents} who did not finish, and its town-size row does not match the file (39.1 / 29.0 / 20.1 / 11.8% against 36.7 / 30.9 / 21.3 / 11.2%). The published shares only work out to whole-number counts for 188 respondents, so that row came from a larger version of the data.`]},
+    {sev: "info", chip: "Design", t: "Limits worth raising in the appraisal",
+     li: ["“No development” only ever appears in the status quo, so the development coefficients also absorb any general tendency to pick a new plan over doing nothing.",
+          "The dollar effects rest on comparisons between about 55 people per group, and in T3 development and water prices always appear together.",
+          "The published p-values treat a person's four answers as independent. Clustering by respondent widens them; the corrected results above use clustered errors.",
+          "The water-loss dollar values were chosen by the authors to be “significant, but not overly large” and were not drawn from a valuation study."]}];
+  $("#findList").innerHTML = F.map((x, i) => `<article class="find"><div class="fh"><h3>${x.t}</h3><span class="chip ${x.sev}">${x.chip}</span></div>
+    ${x.p ? `<p>${x.p}</p>` : ""}${x.li ? `<ul>${x.li.map(l => `<li>${l}</li>`).join("")}</ul>` : ""}${x.ll ? `<div class="legend" style="margin-top:4px"><span><i class="dia"></i>Published</span><span><i class="circ"></i>Ours</span><span><i style="background:var(--shade);border:1px dashed var(--crit-ink)"></i>Impossible for a correct 3-option model</span></div><div id="chLL"></div>` : ""}</article>`).join("");
+  const rows = [
+    {label: "CL as published", paper: -852.9, ours: c1.paper_spec.ll, tip: `<b>Model 1 as published</b><br>Paper <span class="num">−852.9</span> · ours <span class="num">${f(c1.paper_spec.ll, 2)}</span><br>Only possible with card-level pooling`},
+    {label: "CL, corrected", ours: c1.corrected.ll, tip: `<b>Model 1, one group per person per card</b><br><span class="num">${f(c1.corrected.ll, 2)}</span>`},
+    {label: "Mixed logit", paper: P.m3.ll, ours: DATA.ml.m3.primary.ll, tip: `<b>Model 3</b><br>Paper <span class="num">${f(P.m3.ll, 2)}</span> · ours <span class="num">${f(DATA.ml.m3.primary.ll, 2)}</span>`}];
+  const h = $("#chLL"); mount(h, () => dotPlot(h, rows, {domain: [-900, -380], shadeBelow: null1, ref: {x: null1, label: "1-in-3 guess"}, noZero: true,
+    aria: "Log likelihoods compared with the random-guess floor", xTitle: "Log likelihood, all respondents (higher = better fit)", xShort: "Log likelihood (higher = better)"}));
+})();
+
+/* ---------------- simulator ---------------- */
+(function sim() {
+  const st = {t: 1, s: "m1", A: {dev: "Residential", wat: "Low", cul: "None"}, B: {dev: "Limited", wat: "High", cul: "Stables & landscape"}};
+  const sel = (id, list, val) => `<select id="${id}">${list.map(x => `<option ${x === val ? "selected" : ""}>${esc(x)}</option>`).join("")}</select>`;
+  $("#simOpts").innerHTML = ["A", "B"].map(o => `<div class="simopt"><h4><span class="dot" style="background:var(--opt${o})"></span>Option ${o}</h4>
+    <div class="f"><label for="s${o}d">Development</label>${sel("s" + o + "d", DEV.slice(1), st[o].dev)}</div>
+    <div class="f"><label for="s${o}w">Water</label>${sel("s" + o + "w", WAT, st[o].wat)}</div>
+    <div class="f"><label for="s${o}c">Cultural</label>${sel("s" + o + "c", CUL, st[o].cul)}</div>
+    <div class="score" id="sc${o}"></div></div>`).join("");
+  ["A", "B"].forEach(o => { [["d", "dev"], ["w", "wat"], ["c", "cul"]].forEach(([s, k]) => { $("#s" + o + s).onchange = e => { st[o][k] = e.target.value; draw(); }; }); });
+  seg($("#simTreat"), TKEYS.map(t => [t, TSHORT[t] + " · " + TNAME[t]]), () => st.t, v => { st.t = v; draw(); });
+  seg($("#simSample"), [["m1", "All"], ["m2", "Councillors"]], () => st.s, v => { st.s = v; draw(); });
+  function draw() {
+    const b = coefC(st.s), uA = util(st.A, st.t, b), uB = util(st.B, st.t, b);
+    const show = (u, id) => { $(id).innerHTML = u.parts.map(([l, v]) => `${esc(l)} <span style="float:right">${v >= 0 ? "+" : ""}${f(v, 2)}</span>`).join("<br>") + `<br><b>Score <span style="float:right">${f(u.v, 2)}</span></b>`; };
+    show(uA, "#scA"); show(uB, "#scB");
+    const all = TKEYS.map(t => shares3([util(st.A, t, b).v, util(st.B, t, b).v, 0]));
+    $("#simOut").innerHTML = TKEYS.map((t, i) => `<div class="srow ${t === st.t ? "sel" : ""}"><div class="l"><span class="dot" style="background:var(--t${t})"></span>${TSHORT[t]}</div>${barHTML(all[i])}<div class="num small muted">${t === st.t ? "shown" : ""}</div></div>`).join("") +
+      `<div class="legend" style="margin-top:4px"><span><i style="background:var(--optA)"></i>Option A</span><span><i style="background:var(--optB)"></i>Option B</span><span><i style="background:var(--sq)"></i>Keep as is</span></div>`;
+  }
+  draw();
+})();
+
+/* ---------------- reproduce ---------------- */
+(function repro() {
+  const files = [["01_parse_data.py", "Reads S1Table.DTA, checks its structure, rebuilds both samples and the “$ shown” variables", "output/data/*.csv, logs/01_parse_data.log"],
+    ["02_descriptives.py", "Table 1, Figure 1 and the raw pick-rate comparison", "output/tables, output/figures"],
+    ["03_conditional_logit.py", "Models 1–2 as published, plus the corrected grouping with clustered errors", "output/tables/table3_cl.csv"],
+    ["04_mixed_logit.py", "Models 3–4 (simulated maximum likelihood), the draw-sensitivity runs, and Figure 2", "output/tables/table3_ml.csv"],
+    ["05_build_dashboard.py", "Puts every result into this page", "dashboard/index.html"],
+    ["06_slide_figures.py", "Slide-ready 16:9 figures for the presentation", "output/slides/*.png"],
+    ["08_debug_discrepancies.py", "Tests explanations for every published number we could not reproduce", "output/tables/discrepancy_diagnosis.csv"],
+    ["07_paper_figures.py", "Redraws the paper's five exhibits from the parsed CSVs, numbered to match replication-targets/, with side-by-side comparisons", "output/paper_figures/"],
+    ["crosscheck_clogit.R", "Re-estimates models 1–2 in R (survival::clogit) as an independent check", "output/tables/r_crosscheck_clogit.csv"],
+    ["replication_walkthrough.ipynb", "The same steps as a narrated notebook, with outputs", "(renders on GitHub)"]];
+  $("#files").innerHTML = `<thead><tr><th>File</th><th>What it does</th><th>Writes</th></tr></thead><tbody>${files.map(r => `<tr><td class="mono">${r[0]}</td><td style="white-space:normal;min-width:260px">${r[1]}</td><td class="mono small">${r[2]}</td></tr>`).join("")}</tbody>`;
+  const m = DATA.meta; $("#meta").textContent = `Built ${m.built} with Python ${m.python}, pandas ${m.pandas}, numpy ${m.numpy}, scipy ${m.scipy}, statsmodels ${m.statsmodels}.`;
+})();
+
+/* ---------------- nav highlight ---------------- */
+(function nav() {
+  const links = [...document.querySelectorAll("nav.sections a")], map = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { links.forEach(a => a.classList.remove("on")); const a = map.get(e.target.id); if (a) { a.classList.add("on"); a.parentElement.scrollLeft = a.offsetLeft - 24; } } }),
+    {rootMargin: "-45% 0px -50% 0px"});
+  document.querySelectorAll("section.block").forEach(s => io.observe(s));
+})();
+</script>
+
+</body>
+</html>

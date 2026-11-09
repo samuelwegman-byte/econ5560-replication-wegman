@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "completed_utc": "2026-11-09T05:33:08.881053+00:00",
+  "elapsed_seconds": 636.26,
+  "raw_sha256": "ea292824db6b36ef18961aa954f0cb7964af5a7285d7e479840cf7aef19f3df2",
+  "complete_respondents": 164,
+  "complete_rows": 1968,
+  "councillor_rows": 1476,
+  "primary_mixed_logit_converged": {
+    "m3": true,
+    "m4": true
+  },
+  "python": "3.12.16",
+  "packages": {
+    "numpy": "1.26.4",
+    "pandas": "2.3.3",
+    "scipy": "1.13.1",
+    "statsmodels": "0.14.6",
+    "matplotlib": "3.9.4"
+  }
+}
