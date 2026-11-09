@@ -1,0 +1,97 @@
+name: Verify replication from fresh checkout
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "outputs/**"
+      - "logs/**"
+      - "data/raw/**"
+      - "scripts/replication-targets/*.png"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install pinned dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Retrieve unchanged public raw data
+        shell: bash
+        run: |
+          mkdir -p data/raw
+          curl -L --fail --retry 3 \
+            "https://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0165365.s001&type=supplementary" \
+            -o data/raw/S1Table.DTA
+
+      - name: Retrieve published exhibit reference images
+        shell: bash
+        run: |
+          mkdir -p scripts/replication-targets
+          base="https://raw.githubusercontent.com/matthew-suban-slo/econ5560-replication-suban/main/scripts/replication-targets"
+          for f in \
+            01_table1_respondent_characteristics.png \
+            02_table2_attributes_and_levels.png \
+            03_fig1_responses_per_choice_scenario.png \
+            04_table3_regression_results.png \
+            05_fig2_treatment_effect_densities.png
+          do
+            curl -L --fail --retry 3 "$base/$f" -o "scripts/replication-targets/$f"
+          done
+
+      - name: Run complete pipeline from clean outputs
+        shell: bash
+        run: |
+          rm -rf outputs logs
+          mkdir -p logs
+          python run_all.py > logs/run_log.txt 2>&1
+          python -m pip freeze > logs/requirements.txt
+
+      - name: Record fresh-checkout evidence
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, os
+          s = json.loads(pathlib.Path("logs/run_summary.json").read_text())
+          lines = [
+            "# Fresh-checkout verification",
+            "",
+            "This repository was checked out by GitHub Actions into a clean hosted runner.",
+            "",
+            f"- Workflow run: {os.environ.get('GITHUB_SERVER_URL')}/{os.environ.get('GITHUB_REPOSITORY')}/actions/runs/{os.environ.get('GITHUB_RUN_ID')}",
+            f"- Source commit before generated files were committed: {os.environ.get('GITHUB_SHA')}",
+            f"- Status: {s['status']}",
+            f"- Full pipeline elapsed: {s['elapsed_seconds']} seconds",
+            f"- Python: {s['python']}",
+            f"- Complete respondents: {s['complete_respondents']}",
+            f"- Complete alternative rows: {s['complete_rows']}",
+            f"- Councillor rows: {s['councillor_rows']}",
+            f"- Mixed-logit convergence: {s['primary_mixed_logit_converged']}",
+            "",
+            "The workflow deleted any existing outputs before running, installed pinned dependencies, ran python run_all.py, captured stdout/stderr to logs/run_log.txt, and regenerated the outputs from the raw data."
+          ]
+          pathlib.Path("logs/FRESH_CLONE.md").write_text("\n".join(lines) + "\n")
+          PY
+
+      - name: Commit verified data, outputs, and logs
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/raw/S1Table.DTA scripts/replication-targets/*.png outputs logs
+          git commit -m "Verify replication from fresh checkout"
+          git push
