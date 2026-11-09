@@ -71,7 +71,7 @@ The exact environment used for the independent fresh-checkout verification is re
 
 ## Runtime
 
-The measured full-run time from the independent GitHub Actions checkout is recorded in `logs/run_summary.json` and `logs/FRESH_CLONE.md`. This README is updated after that verification with the observed runtime.
+The independently verified full run took **636.26 seconds (10 minutes 36 seconds)** on a GitHub-hosted Linux runner using Python **3.12.16**. The run regenerated **39 output files**, and both primary mixed-logit models converged. The same measured results are recorded in `logs/run_summary.json` and `logs/FRESH_CLONE.md`.
 
 ## Files
 
